@@ -1,0 +1,43 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Recipe } from '../interfaces/recipe.interface';
+import { RecipeService } from '../services/recipe.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, map } from 'rxjs';
+
+@Component({
+  selector: 'app-recipe-detail',
+  templateUrl: './recipe-detail.component.html',
+  styleUrls: ['./recipe-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+
+export class RecipeDetailComponent {
+  recipe: Recipe | undefined;
+  id: number | undefined;
+  recipe$: Observable<Recipe | undefined> | undefined;
+
+  constructor(
+    private recipeService: RecipeService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
+
+  ngOnInit() {
+    this.recipe$ = this.recipeService.getRecipeSubject().pipe(map(recipe =>
+      this.recipe = recipe
+    ));
+  }
+  onAddToShoppingList() {
+    this.recipeService.addIngredientsToShoppingList(this.recipe?.ingredients);
+  }
+  onEditRecipe() {
+    if (this.recipe) {
+      this.recipeService.setRecipeSubject(this.recipe);
+    }
+    this.router.navigate(['edit'], { relativeTo: this.route });
+  }
+  onDeleteRecipe() {
+    this.recipeService.deleteRecipe(this.id!);
+    this.router.navigate(['/recipes']);
+  }
+}

@@ -1,0 +1,143 @@
+@import "/src/styles/3-helpers/variables";
+
+.sidebar {
+  position: sticky;
+  height: 100%;
+  width: 60px;
+  background: $background-color;
+  padding: 6px 16px;
+  z-index: 99;
+  transition: width 0.3s ease;
+
+  .logo-details {
+    height: 45px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    position: relative;
+    opacity: 1;
+    cursor: pointer;
+
+    fa-icon {
+      padding-left: 3px;
+    }
+
+    span {
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    &:hover {
+      color: $color-primary;
+      transition: all 0.3s ease;
+    }
+  }
+
+  &.open {
+    width: 100%;
+    transition: 0.3s;
+
+    .logo-details {
+      span {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      #btn {
+        text-align: right;
+      }
+    }
+  }
+
+  fa-icon {
+    background-color: transparent;
+    width: 30px;
+    display: block;
+    font-size: 25px;
+  }
+
+  .nav-list {
+    height: 100%;
+    margin-top: 1rem;
+    padding: 0;
+  }
+
+  li {
+    position: relative;
+    list-style: none;
+
+    &:hover {
+      .tooltip {
+        opacity: 0.8;
+        pointer-events: auto;
+        transition: all 0.3s ease;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+
+    .tooltip {
+      position: absolute;
+      top: -20px;
+      left: calc(100% + 15px);
+      z-index: 5;
+      background-color: rgba($background-color-rgb, 85%);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 500;
+      opacity: 0;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    a {
+      display: flex;
+      height: 100%;
+      width: 100%;
+      border-radius: 12px;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      gap: 5px;
+
+      &:hover {
+        color: $color-primary;
+
+        fa-icon {
+          transition: 0.3s ease;
+        }
+      }
+    }
+
+    .links-name {
+      font-size: 15px;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+  }
+
+  &.open li,
+  &.open .logo-name {
+    .links-name {
+      opacity: 1;
+      pointer-events: auto;
+      transition: all 0.3s ease;
+    }
+
+    .tooltip {
+      display: none;
+    }
+  }
+}
+
+a:not([href]):not([class]):hover {
+  color: $color-primary !important
+}

@@ -1,0 +1,138 @@
+<div class="board-wrapper">
+  <div>
+    <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
+  </div>
+  <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+    <div class="row pg-row flex">
+      <div class="column">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" formControlName="name" class="form-control" />
+              <span *ngIf="!recipeForm.get('name')?.valid && recipeForm.get('name')?.touched">Please enter the recipe
+                name</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea type="text" id="description" formControlName="description" rows="6"
+                class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+
+              <app-file-upload id="imagePath" formControlName="imagePath" [(ngModel)]="uploadedFiles"
+                (uploadedFile$)="handleUploadedFile($event)"></app-file-upload>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="tags">Tags</label>
+              <mat-chip-listbox multiple="true" formControlName="tags" *ngIf="tags">
+                <mat-chip-option color="primary" *ngFor="let tag of tags" [value]="tag.id" [selected]="isTagSelected(tag)">
+                  {{tag.name}}
+                </mat-chip-option>
+              </mat-chip-listbox>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="column">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="note">Note</label>
+              <textarea type="text" id="note" formControlName="note" rows="6" class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="instruction">Instruction</label>
+              <textarea type="text" id="instruction" formControlName="instruction" rows="6"
+                class="form-control"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="form-group">
+              <label for="favourites">Favourites</label>
+              <mat-slide-toggle color="primary" hideIcon="true" formControlName="favourites"></mat-slide-toggle>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-3">
+            <label for="vield">Vield</label>
+            <input type="number" class="form-control" formControlName="vield" placeholder="0" />
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="vieldType"></label>
+              <input class="form-control" type="text" id="vieldType" formControlName="vieldType" placeholder="serves" />
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <label for="prepTime">PrepTime</label>
+            <input type="number" class="form-control" formControlName="prepTime" placeholder="00" />
+          </div>
+
+          <div class="col-sm-3">
+            <label for="cookTime">CookTime</label>
+            <input type="number" class="form-control" formControlName="cookTime" placeholder="00" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12" formArrayName="ingredients">
+            <div class="row" *ngFor="let ingredientControl of controls; let i = index" [formGroupName]="i">
+              <div class="col-sm-8">
+                <input type="text" class="form-control" formControlName="name" />
+
+              </div>
+              <div class="col-sm-2">
+                <input type="number" class="form-control" formControlName="amount" />
+              </div>
+              <div class="col-sm-2">
+                <button class="btn btn-danger" type="button" (click)="onDeleteIngredient(i)">
+                  x </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-12">
+                <button mat-raised-button color="basic" type="button" (click)="onAddIngredient()">
+                  Add Ingredient
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xs-12">
+        <button mat-raised-button color="primary" type="submit" (click)="onSubmit()" [disabled]="!recipeForm.valid">
+          Save
+        </button>
+        <button mat-raised-button color="basic" type="button" (click)="onCancel()">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

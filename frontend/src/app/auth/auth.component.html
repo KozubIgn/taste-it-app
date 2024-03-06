@@ -1,0 +1,85 @@
+<div class="page-wrapper">
+  <div class="alert alert-danger" *ngIf="error">
+    <p>{{ error }}</p>
+  </div>
+  <div *ngIf="isLoading">
+    <app-loading-spinner></app-loading-spinner>
+  </div>
+  <ng-container *ngIf="!isLoading">
+    <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
+    <div class="form-structure">
+      <div [ngClass]="isLoginMode ? 'signup closed' : 'signup'">
+        <h2 class="form-title" id="signup" (click)="onSwitchMode()">
+          <span>or</span>Sign up
+        </h2>
+        <form #signupForm="ngForm" (ngSubmit)="onSubmit(signupForm)">
+          <div class="form-holder">
+            <input
+              type="email"
+              class="input form-control"
+              placeholder="Email"
+              ngModel
+              name="email"
+              required
+              email
+            />
+            <input
+              type="password"
+              class="input form-control"
+              placeholder="Password"
+              ngModel
+              name="password"
+              required
+              minlength="6"
+            />
+          </div>
+          <button
+            class="submit-btn"
+            type="submit"
+            [disabled]="!signupForm.valid"
+          >
+            Sign up
+          </button>
+        </form>
+      </div>
+
+      <div [ngClass]="isLoginMode ? 'login' : 'login closed'">
+        <div class="center">
+          <h2 class="form-title" id="login" (click)="onSwitchMode()">
+            <span>or</span>Log in
+          </h2>
+          <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+            <div class="form-holder">
+              <input
+                type="email"
+                class="input form-control"
+                placeholder="Email"
+                ngModel
+                name="email"
+                required
+                email
+              />
+              <input
+                type="password"
+                class="input form-control"
+                placeholder="Password"
+                ngModel
+                name="password"
+                required
+                minlength="6"
+              />
+            </div>
+            <button
+              class="submit-btn"
+              type="submit"
+              [disabled]="!loginForm.valid"
+            >
+              Log in
+            </button>
+            <button class="submit-btn" type="button" (click)="loginWithGoogle()"> Login with Google</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

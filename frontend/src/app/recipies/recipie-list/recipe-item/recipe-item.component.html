@@ -1,0 +1,38 @@
+<a class="wrapper">
+  <div class="ft-recipe">
+    <div class="thumb">
+      <img src="{{urlString?.url}}" alt="{{ recipe.name }}" />
+    </div>
+    <div class="content">
+
+      <div class="row-wrapper">
+        <p class="recipe-title">{{recipe.name}}</p>
+      </div>
+      <ul class="recipe-details">
+        <li class="recipe-details-item">
+          <span class="value">
+            <fa-icon [icon]="['fas', 'clock']"></fa-icon>
+            {{recipe.prepTime ? recipe.prepTime : noValue }} </span>
+          <span class="title">Minutes</span>
+        </li>
+        <li class="recipe-details-item">
+          <span class="value"> <fa-icon [icon]="['fas', 'carrot']"></fa-icon>
+            {{recipe.ingredients?.length ? recipe.ingredients?.length : noValue}} </span>
+          <span class="title">Ingredients</span>
+        </li>
+        <li class="recipe-details-item">
+          <span class="value"> <fa-icon [icon]="['fas', 'bowl-food']"></fa-icon>
+            {{recipe.vield ? recipe.vield : noValue}}</span>
+          <span class="title">{{recipe.vieldType ? recipe.vieldType : text}}</span>
+        </li>
+      </ul>
+
+      <p class="description">{{ recipe.description }}</p>
+      <footer class="content footer">
+        <button mat-raised-button color="primary" (click)="onViewRecipe(recipe)">
+          View Recipe
+        </button>
+      </footer>
+    </div>
+  </div>
+</a>

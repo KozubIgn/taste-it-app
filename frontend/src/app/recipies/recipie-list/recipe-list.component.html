@@ -1,0 +1,16 @@
+<div class="board-wrapper">
+  <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
+  <div class="pg-row">
+    <div class="pg-top-row">
+      <button mat-raised-button color="primary" (click)="onNewRecipe()">
+        <fa-icon [icon]="['fas','circle-plus']"></fa-icon>
+        Add Recipe
+      </button>
+    </div>
+    <div class="card-list">
+      <ng-container *ngFor="let recipeElement of recipes">
+        <app-recipe-item [recipe]="recipeElement"></app-recipe-item>
+      </ng-container>
+    </div>
+  </div>
+</div>

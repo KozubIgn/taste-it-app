@@ -1,0 +1,40 @@
+<div class="board-wrapper">
+  <div>
+    <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
+  </div>
+
+  <div class="pg-row flex">
+    <a routerLink="./new">
+      <button mat-raised-button color="primary">
+        <fa-icon [icon]="['fas', 'circle-plus']"></fa-icon>
+        Add Recipe
+      </button></a
+    >
+    <a routerLink="./recipes">
+      <button mat-raised-button color="primary">
+        <fa-icon [icon]="['fas', 'utensils']"></fa-icon>
+        My Recipes
+      </button></a
+    >
+
+    <a routerLink="./favourites">
+      <button mat-raised-button color="primary">
+        <fa-icon [icon]="['fas', 'heart']"></fa-icon>
+        Favourites
+      </button></a
+    >
+    <a routerLink="./shopping-list">
+      <button mat-raised-button color="primary">
+        <fa-icon [icon]="['fas', 'basket-shopping']"></fa-icon>
+        Shopping List
+      </button></a
+    >
+
+    <a routerLink="./tags">
+      <button mat-raised-button color="primary">
+        <fa-icon [icon]="['fas', 'tags']"></fa-icon>
+        Tags
+      </button></a
+    >
+  </div>
+</div>

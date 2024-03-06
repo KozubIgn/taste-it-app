@@ -1,0 +1,44 @@
+@use '../3-helpers/variables' as v;
+
+.button {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  font-family: inherit;
+  font-size: 1.25rem;
+  border: 0;
+  border-radius: v.$border-radius;
+  background: v.$color-primary-dark;
+  color: #f7f7f7;
+  cursor: pointer;
+  outline: none;
+  transition-property: background-color, box-shadow;
+  transition-duration: 0.35s;
+
+  &:hover {
+    transition-property: background-color;
+    transition-duration: 0.35s;
+    background: v.$color-primary-dark;
+  }
+  &:focus {
+    box-shadow: 0 0 0 1px v.$font-color-label;
+  }
+  &:disabled {
+    color: v.$font-color-disabled;
+    background: v.$font-color-primary;
+    cursor: not-allowed;
+  }
+}
+.btn-secondary {
+  background: transparent;
+  border: 1px solid v.$color-primary-dark;
+  color: v.$font-color-primary;
+
+  &:hover {
+    color: v.$font-color-secondary;
+  }
+}

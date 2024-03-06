@@ -1,0 +1,18 @@
+<div class="file-upload">
+    <div>
+        <input #fileInput type="file" id="file" (change)="handleUploadFiles($event)" accept="image/**" multiple />
+        <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">
+            <fa-icon [icon]="['fas', 'image']"></fa-icon> Add photo
+        </button>
+        <div *ngFor="let errorFile of hasErrorFiles" class="message">
+            {{ errorFile.error?.name }} {{ errorFile.error?.errorMessage }}
+        </div>
+    </div>
+
+    <div class="dropzone"appDragAndDropFile (fileDropped)="fileDropped($event)">
+        <div class="uploaded-file-container" *ngFor="let uploadedFile of uploadedFiles">
+            <img [src]="uploadedFile.url" class="preview" />    
+            <button (click)="removeFile(uploadedFile)">x</button>
+        </div>
+    </div>
+</div>

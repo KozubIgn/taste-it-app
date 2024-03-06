@@ -1,0 +1,220 @@
+@import "../3-helpers/variables";
+
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.form-structure {
+  margin-top:15px;
+  background-color: $font-color-label;
+  border-radius: 15px;
+  height: 550px;
+  width: 350px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0px 0px 30px -20px $font-color-disabled;
+
+  .input {
+    background-color: rgba($background-color-rgb, 95%);
+    padding: 8px 15px;
+    margin: 2px 0;
+  }
+
+  &::after {
+    content: "";
+    opacity: 0.8;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    background-size: 500px;
+    background-image: url("../../../src/assets/login_page.jpg");
+  }
+  .signup {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 65%;
+    z-index: 5;
+    transition: all 0.5s ease;
+
+    .form-title {
+      color: $color-primary;
+      font-size: 1.7em;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    span {
+      color: rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .form-holder,
+    .submit-btn {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    &.closed {
+      top: 5%;
+      transform: translate(-50%);
+      transition: all 0.3s ease;
+
+      .form-title {
+        font-size: 1em;
+        cursor: pointer;
+
+        span {
+          margin-right: 5px;
+          opacity: 1;
+          visibility: visible;
+          transition: all 0.3s ease;
+        }
+      }
+
+      .form-holder,
+      .submit-btn {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    .form-holder.input::-webkit-input-placeholder {
+      color: rgba(0, 0, 0, 0.4);
+    }
+
+    .form-holder {
+      overflow: hidden;
+      margin-top: 50px;
+      visibility: visible;
+      transition: all 0.3s ease;
+    }
+  }
+  .signup .form-holder .input:last-child {
+    border-bottom: 0;
+  }
+
+  .login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    z-index: 5;
+    transition: all 0.5s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, -35%);
+      background-color: rgba($background-color-rgb, 85%);
+      width: 200%;
+      height: 35em;
+      border-radius: 50%;
+      z-index: 4;
+      transition: all 0.3s ease;
+    }
+
+    .center {
+      position: absolute;
+      top: calc(50% - 10%);
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 65%;
+      z-index: 5;
+      transition: all 0.5s ease;
+
+      span {
+        color: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        margin-right: -20px;
+      }
+
+      .form-title {
+        font-size: 1em;
+        cursor: pointer;
+        color: $font-color-primary;
+        font-size: 1.7em;
+        text-align: center;
+      }
+
+      .form-holder,
+      .submit-btn {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    &.closed {
+      &::before {
+        top: 90%;
+        transform: translate(-50%, 34%);
+        transition: all 0.5s ease;
+      }
+      .center {
+        transform: translate(-50%, 120%);
+        transition: all 0.3s ease;
+
+        .form-title {
+          font-size: 1em;
+          color: $font-color-primary;
+          opacity: 1;
+          visibility: visible;
+          cursor: pointer;
+
+          span {
+            color: rgba(0, 0, 0, 0.4);
+            margin-right: 5px;
+            opacity: 1;
+            visibility: visible;
+            transition: all 0.3s ease;
+          }
+        }
+
+        .form-holder,
+        .submit-btn {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+    }
+  }
+
+  .signup .submit-btn,
+  .login .center .submit-btn {
+    background-color: rgba(0, 0, 0, 0.4);
+    color: rgba(255, 255, 255, 0.7);
+    border: 0;
+    border-radius: 15px;
+    display: block;
+    margin: 15px auto;
+    padding: 15px 45px;
+    width: 100%;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transition: all 0.3s ease;
+      background-color: rgba(0, 0, 0, 0.8);
+    }
+  }
+}

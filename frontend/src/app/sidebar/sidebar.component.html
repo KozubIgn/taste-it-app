@@ -1,0 +1,72 @@
+<div class="sidebar" #sidebar [ngClass]="open ? 'sidebar open' : 'sidebar'">
+  <div class="logo-details">
+    <a (click)="onOpen()">
+      <fa-icon [icon]="['fas', 'bars']"></fa-icon>
+    </a>
+    <div *ngIf="user" class="logo-name">
+      <span>{{user.email}}</span>
+    </div>
+  </div>
+
+  <ul class="nav-list">
+    <li>
+      <a routerLink="/dashboard">
+        <fa-icon [icon]="['fas', 'house']"></fa-icon>
+        <span class="links-name">Home</span>
+      </a>
+      <span class="tooltip">Home</span>
+    </li>
+    <li>
+      <a routerLink="./new">
+        <fa-icon [icon]="['fas', 'circle-plus']"></fa-icon>
+        <span class="links-name">Add a Recipe</span>
+      </a>
+      <span class="tooltip">Add a Recipe</span>
+    </li>
+    <li>
+      <a routerLink="./recipes">
+        <fa-icon [icon]="['fas', 'utensils']"></fa-icon>
+        <span class="links-name"> My Recipes</span>
+      </a>
+      <span class="tooltip">My recipes</span>
+    </li>
+    <li>
+      <a routerLink="./favourites">
+        <fa-icon [icon]="['fas', 'heart']"></fa-icon>
+        <span class="links-name">Favourites</span>
+      </a>
+      <span class="tooltip">Favourites</span>
+    </li>
+    <li>
+      <a routerLink="./shopping-list">
+        <fa-icon [icon]="['fas', 'basket-shopping']"></fa-icon>
+        <span class="links-name">Shopping List</span>
+      </a>
+      <span class="tooltip">Shopping List</span>
+    </li>
+    <li>
+      <a routerLink="./suprise">
+        <fa-icon [icon]="['fas', 'gift']"></fa-icon>
+        <span class="links-name">Suprise Me</span>
+      </a>
+      <span class="tooltip">Suprise Me</span>
+    </li>
+    
+    <li>
+      <a routerLink="./tags">
+        <fa-icon [icon]="['fas', 'tags']"></fa-icon>
+        <span class="links-name">Tags</span>
+      </a>
+      <span class="tooltip">Tags</span>
+    </li>
+
+    <li>
+      <a (click)="onLogout()" *ngIf="isAuthenticated">
+        <fa-icon [icon]="['fas', 'door-open']"></fa-icon>
+        <span class="links-name">Logout</span>
+      </a>
+      <span class="tooltip">Logout</span>
+    </li>
+
+  </ul>
+</div>

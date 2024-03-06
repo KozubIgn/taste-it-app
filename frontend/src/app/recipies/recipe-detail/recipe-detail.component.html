@@ -1,0 +1,86 @@
+<div class="board-wrapper">
+  <div>
+    <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
+  </div>
+  <div class="pg-row flex">
+
+    <ng-container *ngIf="recipe$ | async as recipe">
+      <div class="options full right">
+        <a style="cursor: pointer" (click)="onAddToShoppingList()">
+          <button mat-button color="primary">
+            <fa-icon [icon]="['fas', 'basket-shopping']"></fa-icon> To shopping list</button></a>
+        <a style="cursor: pointer" (click)="onEditRecipe()">
+          <button mat-button color="primary">
+            <fa-icon [icon]="['fas', 'pen-to-square']"></fa-icon> Edit</button></a>
+        <a style="cursor: pointer" (click)="onDeleteRecipe()">
+          <button mat-button color="primary">
+            <fa-icon [icon]="['fas', 'trash-can']"></fa-icon> Delete</button></a>
+      </div>
+      <div class="recipe-view">
+        <div class="recipe-about">
+          <div class="column recipe-images">
+            <div class="col-xs-12" *ngIf="recipe.imagePath">
+              <img *ngFor="let image of recipe.imagePath" [src]="image.url" alt="{{recipe?.name}}"
+                class="img-responsive" style="max-height:320px"/>
+            </div>
+          </div>
+          <div class="recipe-info-row">
+              <h3>{{recipe?.name}}</h3>
+            <div class="recipe-info-row">
+              <div class="item-row">
+                <fa-icon [icon]="['fas', 'clock']"></fa-icon>
+              <span>Prep: {{recipe?.prepTime}} mins</span>  
+              </div>
+              <div class="item-row">
+                <fa-icon [icon]="['fas', 'fire-burner']"></fa-icon>
+               <span>Cook: {{recipe?.cookTime}} mins</span> 
+              </div>
+              <div class="item-row">
+                <fa-icon [icon]="['fas', 'bowl-food']"></fa-icon>
+               <span>{{recipe?.vield}} {{recipe?.vieldType}}</span> 
+              </div>
+              <div class="item-row">
+                <fa-icon [icon]="['fas', 'carrot']"></fa-icon>
+                <span>{{recipe?.ingredients?.length}} Ingredients</span>
+              </div>
+            </div>
+            <div class="recipe-info-row" *ngIf="recipe.tags as tags">
+              <div class="recipe-boxes">
+                <button *ngFor="let tag of tags" mat-stroked-button color="primary">{{tag.name}}</button>
+              </div>
+            </div>
+            <div class="recipe-info-row">
+              <h4>Description</h4><span>{{recipe?.description}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="recipe-cooking">
+
+          <div class="recipe-ingredients">
+
+          <div class="recipe-info-row">
+            <h4>Ingredients</h4>
+          </div>
+          <div class="recipe-info-row">
+            <ul class="row-list">
+              <li class="list-item" *ngFor="let ingredient of recipe?.ingredients">
+                <span><b>{{ingredient.amount}}</b> {{ingredient.name}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="recipe-instruction">
+          <div class="recipe recipe-info-row">
+            <h4>Instruction</h4><span>{{recipe?.instruction}}</span>
+          </div>
+          <div class="recipe-info-row">
+            <h4>Note</h4><span>{{recipe?.note}}</span>
+          </div>
+        </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

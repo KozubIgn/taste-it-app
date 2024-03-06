@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "outDir": "./built",
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "strict": true,
+        "noImplicitOverride": true,
+        "noImplicitReturns": false,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+},
+"include": ["src/**/*"]
+}

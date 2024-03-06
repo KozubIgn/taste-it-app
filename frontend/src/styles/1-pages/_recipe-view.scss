@@ -1,0 +1,104 @@
+@import "../3-helpers/variables";
+
+.recipe-view>.recipe-about,
+.recipe-cooking {
+    display: flex;
+
+    .recipe-ingredients {
+        flex: 1 1 40%;
+        border-right: 2px solid $color-primary;
+    }
+
+    .recipe-instruction {
+        flex: 1 1 60%;
+    }
+}
+
+.recipe-about {
+    display: block;
+
+    .recipe-images {
+        flex: 1 1 420px;
+        max-width: 420px;
+        padding: 20px;
+    }
+}
+
+.recipe-info-block {
+    flex: 1;
+    margin: bottom 0;
+    display: block;
+    flex-direction: column;
+    position: relative;
+}
+
+.recipe-info-row {
+    display: flex;
+    flex-flow: row wrap;
+    flex: auto;
+    margin: 0;
+    padding: 10px;
+
+    .item-row {
+        display: flex;
+        flex-direction: row;
+        max-width: 200px;
+        margin: 0;
+        padding: 0.5vw;
+
+        fa-icon {
+            margin-right: 3px;
+        }
+    }
+}
+
+.recipe-tags {
+    flex-flow: row wrap;
+}
+
+.recipe-cooking {
+    display: flex;
+}
+
+.recipe-boxes {
+    display: flex;
+    flex-flow: row wrap;
+
+    button {
+        margin: 3px;
+    }
+}
+
+.row-list {
+    width: 100%;
+    padding-left: 0;
+
+    .list-item {
+        list-style: none;
+
+        &:nth-child(even) {
+            background-color: $font-color-label;
+        }
+    }
+
+    li:nth-child(even) {
+        background-color: $font-color-label;
+    }
+}
+
+.options {
+    display: flex;
+    flex-direction: row;
+}
+
+.full {
+    width: 100%;
+}
+
+.right {
+    justify-content: flex-end;
+}
+
+.left {
+    justify-content: flex-start;
+}

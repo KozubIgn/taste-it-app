@@ -1,0 +1,31 @@
+.board-wrapper,
+.page-wrapper {
+  margin: 30px 0 25px 0;
+
+  .dashboard-logo {
+    display: block;
+    margin: 5px auto 0;
+    width: 30vw;
+    max-width: 250px;
+  }
+
+  .pg-top-row {
+    margin-bottom: 15px;
+  }
+
+  .pg-row {
+    margin: 25px 15px;
+    border: 1px dotted bisque;
+
+    .column {
+      width: 50%;
+    }
+  }
+
+  .flex {
+    display: flex;
+    justify-content: space-around;
+    flex-flow: row wrap;
+    padding: 1vw;
+  }
+}
