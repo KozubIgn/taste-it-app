@@ -3,12 +3,13 @@ export class User {
     public id: string,
     public email: string,
     private _token: string,
-    private _tokenExpirationDate: Date | null
+    private _tokenExpirationTime: number | undefined
   ) {}
 
   get token() {
-    if (!this._tokenExpirationDate || new Date() > this._tokenExpirationDate) {
-      return null;
+    const now = Math.floor(Date.now() / 1000);
+    if (!this._tokenExpirationTime ||  now > this._tokenExpirationTime) {
+      return undefined;
     }
     return this._token;
   }
