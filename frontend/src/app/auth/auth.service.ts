@@ -117,7 +117,7 @@ export class AuthService {
   }
 
   getRemainingTime(timeInMs: number) {
-    return timeInMs ? (timeInMs * 1000) - Date.now() : 0;
+    return timeInMs ? timeInMs - Math.floor(Date.now() / 1000) : 0;
   }
 
   private handleAuthentication(localId: string, email: string, token: string, expiresIn: number) {
