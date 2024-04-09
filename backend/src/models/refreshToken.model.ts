@@ -1,16 +1,32 @@
-import { Schema, model } from "mongoose";
-import { User } from "./user.model";
+import { Schema, Types, model } from "mongoose";
 
 export interface RefreshToken {
     token: string;
-    user: User;
+    user: Types.ObjectId;
     expiryDate: Date;
 }
 
-export const RefreshTokenSchema = new Schema<RefreshToken>({
+interface RefreshTokenBase extends RefreshToken {
+    isExpired: boolean;
+}
+
+export const RefreshTokenSchema = new Schema<RefreshTokenBase>({
     token: String,
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, ref: 'user' },
     expiryDate: Date,
+}, {
+    toJSON: {
+        virtuals: true
+    },
+    toObject: {
+        virtuals: true
+    }
+}
+);
+
+RefreshTokenSchema.virtual('isExpired').get(function(this : RefreshTokenBase ) {
+    return new Date(Date.now()) >= this.expiryDate;
 });
 
-export const RefreshTokenModel = model<RefreshToken>('refreshToken', RefreshTokenSchema);
+
+export const RefreshTokenModel = model<RefreshTokenBase>('refreshToken', RefreshTokenSchema);
