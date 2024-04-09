@@ -1,27 +1,29 @@
 import { verify } from 'jsonwebtoken';
+import { UserModel } from '../src/models/user.model';
+import { RefreshTokenModel } from '../src/models/refreshToken.model';
 
-export const middlewares = {
-    verifyToken: async (req: any, res: any, next: any) => {
-        const token = req.headers.access_token as string;
-        if (!token) return res.status(403).send();
-        try {
-            const decodedUser = verify(token, process.env.JWT_SECRET!);
-            req.user = decodedUser;
-        } catch (error) {
-            res.status(403).send("middleware verification filed");
+export async function auth(req: any, res: any, next: any) {
+    const token = req.headers.access_token as string;
+    console.log('[auth middle - be] acces_token from header', token);
+    if (!token) {
+        res.status(403).send({ message: "[MIDDLEWARE] No token provided!" });
+        next();
+    }
+    try {
+        const decodedUser = verify(token, process.env.JWT_SECRET!) as { id: string };
+        const userId = decodedUser.id;
+        console.log('decoded user: ', decodedUser);
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            return res.status(401).json({ message: 'Unauthorized user' });
         }
-        return next();
 
-    },
-    getUserId: async (req: any, res: any, next: any) => {
-        const token = req.headers.access_token as string;
-        if (!token) return res.status(403).send();
-        try {
-            const decodedUser = verify(token, process.env.JWT_SECRET!);
-            req.userid = decodedUser;
-        } catch (error) {
-            res.status(403).send("middleware verification filed");
+        const refreshToken = await RefreshTokenModel.find({ user: user.id });
+        if (!refreshToken) {
+            return res.status(401).json({ message: 'Unauthorized refreshToken' });
         }
-        return next();
+        next();
+    } catch {
+        res.status(403).send({ message: "[middleware] verification filed - token Expired" });
     }
 }
