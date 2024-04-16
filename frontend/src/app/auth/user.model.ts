@@ -3,13 +3,16 @@ export class User {
     public id: string,
     public email: string,
     private _token: string,
-    private _tokenExpirationDate: Date | null
+    public favourite_recipes?: any,
+    public created_recipes?: any,
+    public custom_objects?: any,
+    public settings?: any,
+    public createdAt?: Date,
+    public updatedAt?: Date
   ) {}
 
   get token() {
-    if (!this._tokenExpirationDate || new Date() > this._tokenExpirationDate) {
-      return null;
-    }
     return this._token;
-  }
+}
+
 }
