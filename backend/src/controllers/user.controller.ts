@@ -49,14 +49,13 @@ export const refreshToken = async (req: any, res: any) => {
     }
     try {
         const user = await getUserFromRefreshToken(token);
-         let newRefreshToken = generateTokenForRefreshToken(user.id as string);
-         const refreshToken = JSON.parse(atob(newRefreshToken.split('.')[1]));
-         const expirationDate = refreshToken.exp * 1000;
-         const timeout = expirationDate - Date.now();
+        let newRefreshToken = generateTokenForRefreshToken(user.id as string);
+        const refreshToken = JSON.parse(atob(newRefreshToken.split('.')[1]));
+        const expirationDate = refreshToken.exp * 1000;
         try {
             await RefreshTokenModel.findOneAndUpdate(
                 { token },
-                { $set: { token: newRefreshToken, expiryDate: new Date(timeout) } },
+                { $set: { token: newRefreshToken, expiryDate: new Date(expirationDate) } },
                 { new: true },
             );
         } catch (updateError) {
@@ -64,14 +63,14 @@ export const refreshToken = async (req: any, res: any) => {
             return res.status(500).send({ message: updateError });
         };
         let newJwtTokenforUser = generateJwtTokenForUser(user.id as string);
-         setTokenCookie(res, newRefreshToken);
-         return res.send({
-             user: { ...getUserDetails(user), token: newJwtTokenforUser },
+        setTokenCookie(res, newRefreshToken);
+        return res.send({
+            user: { ...getUserDetails(user), token: newJwtTokenforUser },
             jwtToken: newJwtTokenforUser,
             refreshToken: newRefreshToken
         });
-     } catch (error) {
-         return res.status(500).send({ error });
+    } catch (error) {
+        return res.status(500).send({ error });
     }
 }
 
@@ -79,9 +78,10 @@ export const revokeToken = async (req: any, res: any) => {
     const token = req.body.token || req.cookies.refreshToken;
     if (!token) { return res.status(400).json({ message: 'Token is required.' }); }
     try {
-        await RefreshTokenModel.findOneAndDelete({ token });
-        // clearCookie(res);
-        return res.status(200).send({ message: 'Token revoked successfully' });
+        await RefreshTokenModel.findOneAndDelete({ token }).then(() => {
+            clearCookie(res);
+            return res.status(200).send({ message: 'Token revoked successfully' });
+        });
     } catch (error) {
         return res.status(500).send({ message: 'Cannot revoke!' });
     }
@@ -93,7 +93,7 @@ const generateRefreshTokenModel = async (user: User) => {
     const refreshTokenModel: RefreshToken = {
         token: generateTokenForRefreshToken(userIdAsString),
         user: userId,
-        expiryDate: new Date(Date.now() + 120000)
+        expiryDate: new Date(Date.now() + Number(process.env["REFRESH_TOKEN_EXP_TIME_NUMBER"]))
     }
     return await RefreshTokenModel.create(refreshTokenModel);
 }
@@ -107,7 +107,7 @@ const getUserFromRefreshToken = async (token: string) => {
 const setTokenCookie = (res: any, token: string) => {
     const cookieOptions = {
         httpOnly: true,
-        expires: new Date(Date.now() + 180000) // 3 min
+        expires: new Date(Date.now() + Number(process.env["COOKIE_TIME"]))
     };
     console.log('cookie TIME:', cookieOptions.expires);
     res.cookie('refreshToken', token, cookieOptions);
@@ -118,11 +118,11 @@ const clearCookie = (res: any) => {
 }
 
 const generateTokenForRefreshToken = (id: string) => {
-    return jwt.sign({ id: id }, process.env["JWT_REFRESH_TOKEN_SECRET"]!, { expiresIn: "3m" });
+    return jwt.sign({ id: id }, process.env["JWT_REFRESH_TOKEN_SECRET"]!, { expiresIn: process.env["REFRESH_TOKEN_EXP_TIME"] });
 }
 
 const generateJwtTokenForUser = (userId: string) => {
-    return jwt.sign({ id: userId }, process.env["JWT_SECRET"]!, { expiresIn: "1m" });
+    return jwt.sign({ id: userId }, process.env["JWT_SECRET"]!, { expiresIn: process.env["JWT_TOKEN_EXP_TIME"] });
 }
 
 const getUserDetails = (user: User) => {
