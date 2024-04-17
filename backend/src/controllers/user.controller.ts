@@ -18,8 +18,16 @@ export const signup = async (req: any, res: any) => {
         favourite_recipes: [],
         created_recipes: []
     };
-    const dbUser = await UserModel.create(newUser);
-    res.send(generateJwtTokenForUser(dbUser.id), dbUser)
+    await UserModel.create(newUser).then(async (user) => {
+         await generateRefreshTokenModel(user).then(async (tokenModel) => {
+           await setTokenCookie(res, tokenModel.token);
+            res.status(200).send({
+                user: getUserDetails(user),
+                jwtToken: generateJwtTokenForUser(user.id),
+                refreshToken: tokenModel.token
+            })
+        })
+    })
 }
 
 export const login = async (req: any, res: any) => {
@@ -30,7 +38,7 @@ export const login = async (req: any, res: any) => {
         const refreshTokenModel = await generateRefreshTokenModel(user);
         setTokenCookie(res, refreshTokenModel.token);
         res.status(200).send({
-            user: user,
+            user: getUserDetails(user),
             jwtToken: jwtToken,
             refreshToken: refreshTokenModel.token,
         });
