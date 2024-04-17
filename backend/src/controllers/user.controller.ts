@@ -4,15 +4,12 @@ import * as jwt from 'jsonwebtoken';
 import { RefreshToken, RefreshTokenModel } from '../models/refreshToken.model';
 import { Types } from "mongoose";
 
-
-
 export const signup = async (req: any, res: any) => {
     const email = req.body.email;
     const hashedPassword = await hash(req.body.password, 10);
     const user = await UserModel.findOne({ email });
     if (user) {
         res.status(401).send('user is already exist');
-        return
     }
     const newUser: User = {
         id: '',
@@ -109,7 +106,6 @@ const setTokenCookie = (res: any, token: string) => {
         httpOnly: true,
         expires: new Date(Date.now() + Number(process.env["COOKIE_TIME"]))
     };
-    console.log('cookie TIME:', cookieOptions.expires);
     res.cookie('refreshToken', token, cookieOptions);
 }
 
