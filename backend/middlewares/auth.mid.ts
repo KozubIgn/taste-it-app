@@ -6,8 +6,7 @@ export async function auth(req: any, res: any, next: any) {
     const token = req.headers.access_token as string;
     console.log('[auth middle - be] acces_token from header', token);
     if (!token) {
-        res.status(403).send({ message: "[MIDDLEWARE] No token provided!" });
-        next();
+        res.send({ message: "[MIDDLEWARE] No token provided!" });  
     }
     try {
         const decodedUser = verify(token, process.env.JWT_SECRET!) as { id: string };
