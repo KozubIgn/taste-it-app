@@ -1,8 +1,4 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {
-  Auth,
-  GoogleAuthProvider, signInWithPopup
-} from '@angular/fire/auth';
 import { Injectable, inject } from '@angular/core';
 import {
 } from 'firebase/auth'
@@ -34,6 +30,7 @@ export interface LocalStoreUserData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  // private auth: Auth = inject(Auth);
   private http: HttpClient = inject(HttpClient)
   private router: Router = inject(Router)
   private localStorageService: LocalStorageService = inject(LocalStorageService)
@@ -41,18 +38,23 @@ export class AuthService {
   private refreshTokenTimeout?: NodeJS.Timeout;
   private autoLoginTimeout: any;
 
-  GoogleAuth() {
-    return signInWithPopup(this.auth, new GoogleAuthProvider())
-      .then((result) => {
-        const user = result.user;
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        this.handleAuthentication(user.uid, user.email!, token!, 3600)
-      })
-  }
-  logoutPopout() {
-    this.auth.signOut();
-  }
+  // GoogleAuth() {
+  //   return signInWithPopup(this.auth, new GoogleAuthProvider())
+  //     .then((result) => {
+  //       const user = result.user;
+  //       const credential = GoogleAuthProvider.credentialFromResult(result);
+  //       const token = credential?.accessToken;
+  //       this.handleAuthentication(
+  //         {
+  //           id: result.user.uid,
+  //           email: result.user.email,
+  //           _token: '',
+  //           token: ''
+  //         },
+  //         token,
+  //         user.refreshToken)
+  //     })
+  // }
 
   signUp(email: string, password: string) {
     return this.http.post<AuthResponseData>(USER_SIGN_UP, { email: email, password: password, returnSecureToken: true })
