@@ -4,6 +4,7 @@ import { Recipe, RecipeModel, ImageUrl } from '../models/recipe.model';
 import { Tag, TagModel } from '../models/tag.model';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Ingredient } from '../models/ingredient.model';
+import { auth } from '../../middlewares/auth.mid';
 const router = Router();
 
 router.get('/', asyncHandler(async (req, res) => {
@@ -34,7 +35,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 }
 ));
 
-router.post('/new', asyncHandler(async (req: any, res: any) => {
+router.post('/new', auth, asyncHandler(async (req: any, res: any) => {
     const newRecipeData: Recipe = req.body;
     try {
         const user = jwt.verify(req.headers.access_token, process.env.JWT_SECRET!) as JwtPayload
