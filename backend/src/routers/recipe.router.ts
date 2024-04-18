@@ -9,7 +9,6 @@ const router = Router();
 
 router.get('/', asyncHandler(async (req, res) => {
     try {
-        const token = req.headers.authorization;
         const recipes = await RecipeModel.find();
         res.send(recipes);
     } catch (error) {
