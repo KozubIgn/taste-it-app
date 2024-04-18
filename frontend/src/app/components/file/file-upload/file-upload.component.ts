@@ -18,7 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class FileUploadComponent implements OnInit, ControlValueAccessor {
     uploadedFile?: UploadedFile;
     uploadedFiles: UploadedFile[] = [];
-    files: File[] = []; //droppedFile
+    files: File[] = [];
     imagePreviewUrls: string[] = [];
     hasErrorFiles: UploadedFile[] = [];
     fileUploadId: string = '';
