@@ -25,6 +25,13 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
+export interface LocalStoreUserData {
+  id: string;
+  email: string;
+  _token: string;
+  _tokenExpirationTime: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http: HttpClient = inject(HttpClient)
@@ -125,7 +132,7 @@ export class AuthService {
   }
 
   public getUser(): User | null {
-    return this.userSub$.value;
+    return this.userSub$.value;       
   }
 
   handleError(errorRes: HttpErrorResponse) {
