@@ -7,6 +7,7 @@ import userRouter from './routers/user.router';
 import tagRouter from './routers/tag.router';
 import { dbConnect } from './config/database.config';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 const PORT = process.env.PORT;
 const app = express();
@@ -21,7 +22,7 @@ app.use(cors({
 app.listen(PORT, () => {
     console.log(`Success! Website run on http://localhost:${PORT}`);
 });
-
+app.use(cookieParser());
 app.use('/api/recipes', recipeRouter);
 app.use('/api/user', userRouter);
 app.use('/api/tags', tagRouter);

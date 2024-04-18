@@ -8,4 +8,7 @@ export const TAGS_URL = BASE_URL + '/api/tags';
 
 export const USER_SIGN_UP = BASE_URL + '/api/user/signup';
 export const USER_LOGIN = BASE_URL + '/api/user/login';
+export const AUTH = BASE_URL + '/api/user/';
+export const REFRESH_TOKEN = AUTH + 'refresh-token';
+export const REVOKE_TOKEN = AUTH + 'revoke-token';
 

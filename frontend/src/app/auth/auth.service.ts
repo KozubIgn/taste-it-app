@@ -9,20 +9,19 @@ import {
 import {
   BehaviorSubject,
   catchError,
+  map,
   tap,
   throwError,
 } from 'rxjs';
 import { User } from './user.model';
 import { Router } from '@angular/router';
-import { USER_LOGIN, USER_SIGN_UP } from '../shared/constants/urls';
-import { jwtDecode } from 'jwt-decode';
+import { REFRESH_TOKEN, REVOKE_TOKEN, USER_LOGIN, USER_SIGN_UP } from '../shared/constants/urls';
+import { LocalStorageService } from './local-storage.service';
 
 export interface AuthResponseData {
-  token: string;
-  email: string;
+  jwtToken: string;
   refreshToken: string;
-  expiresIn: string;
-  id: string;
+  user: User;
   registered?: boolean;
 }
 
@@ -35,11 +34,12 @@ export interface LocalStoreUserData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private auth: Auth = inject(Auth);
   private http: HttpClient = inject(HttpClient)
   private router: Router = inject(Router)
-  user$ = new BehaviorSubject<User | null>(null);
-  tokenExpirationTimer: any;
+  private localStorageService: LocalStorageService = inject(LocalStorageService)
+  public userSub$ = new BehaviorSubject<User | null>(null);
+  private refreshTokenTimeout?: NodeJS.Timeout;
+  private autoLoginTimeout: any;
 
   GoogleAuth() {
     return signInWithPopup(this.auth, new GoogleAuthProvider())
@@ -55,91 +55,84 @@ export class AuthService {
   }
 
   signUp(email: string, password: string) {
-    return this.http.post<AuthResponseData>(
-      USER_SIGN_UP,
-      {
-        email: email,
-        password: password,
-        returnSecureToken: true,
-      }
-    )
+    return this.http.post<AuthResponseData>(USER_SIGN_UP, { email: email, password: password, returnSecureToken: true })
       .pipe(
         catchError(this.handleError),
         tap((resData) => {
-          const expirationDate = this.getExpirationTimefromToken(resData.token);
-          this.handleAuthentication(resData.id, resData.email, resData.token, expirationDate!);
+          this.handleAuthentication(
+            resData.user,
+            resData.jwtToken,
+            resData.refreshToken,
+          );
+          this.startRefreshTokenTimer();
         })
       );
   }
 
   logIn(email: string, password: string) {
-    return this.http.post<AuthResponseData>(
-      USER_LOGIN,
-      {
-        email: email,
-        password: password,
-      }
-    )
+    return this.http.post<any>(USER_LOGIN, { email: email, password: password }, { withCredentials: true })
       .pipe(
         catchError(this.handleError),
         tap((resData) => {
-          this.handleAuthentication(resData.id, resData.email, resData.token, this.getExpirationTimefromToken(resData.token)!);
+          this.handleAuthentication(
+            resData.user,
+            resData.jwtToken,
+            resData.refreshToken,
+          );
+          this.startRefreshTokenTimer();
         })
       );
   }
 
-  handleAutoLogin() {
-    const localStoreUserData: LocalStoreUserData = JSON.parse(localStorage.getItem('userData') || '{}');
-    if (!localStoreUserData) {
-      return;
-    }
-    const loadedUser = this.loadUserFromLocalStorage(localStoreUserData);
-    if (loadedUser) {
-      this.user$.next(loadedUser);
-      const remainingTime = this.getRemainingTime(localStoreUserData._tokenExpirationTime);
-      this.setLogoutTimer(remainingTime);
-    }
-  }
-
-  loadUserFromLocalStorage(userData: LocalStoreUserData): User | null {
-    if (!userData || !userData._token) {
-      return null;
-    }
-    const tokenExpirationTime = this.getExpirationTimefromToken(userData._token);
-    return new User(userData.id, userData.email, userData._token, tokenExpirationTime);
-  }
-
-  private getExpirationTimefromToken(token: string): number | undefined {
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      return decodedToken.exp;
-    }
-  }
-
-  getRemainingTime(timeInMs: number) {
-    return timeInMs ? timeInMs - Math.floor(Date.now() / 1000) : 0;
-  }
-
-  private handleAuthentication(localId: string, email: string, token: string, expiresIn: number) {
-    const user = new User(localId, email, token, expiresIn);
-    this.user$.next(user);
-    localStorage.setItem('userData', JSON.stringify(user));
-  }
-
   logOut() {
-    this.user$.next(null);
-    this.router.navigate(['/auth']);
-    localStorage.removeItem('userData');
-    if (this.tokenExpirationTimer) {
-      clearTimeout(this.tokenExpirationTimer);
+    if (this.userSub$) {
+      this.http.post<any>(REVOKE_TOKEN, {}, { withCredentials: true }).subscribe()
+      this.stopRefreshTokenTimer();
+      this.userSub$.next(null);
+      this.localStorageService.clearAll();
+      this.router.navigate(['/auth']);
     }
-    this.tokenExpirationTimer = null;
   }
 
-  setLogoutTimer(expirationTime: number) {
-    this.tokenExpirationTimer = setTimeout(() => {
-      this.logOut();
-    }, expirationTime);
+  refreshToken() {
+    return this.http.post<any>(REFRESH_TOKEN, {}, { withCredentials: true })
+      .pipe(map((response) => {
+        this.userSub$.next(response.user);
+        this.startRefreshTokenTimer();
+        this.localStorageService.updateUserToken(response.user.token);
+        this.localStorageService.setToken(response.jwtToken);
+        this.localStorageService.setRefreshToken(response.refreshToken);
+        return response.user;
+      }),
+      )
+  }
+
+  private startRefreshTokenTimer() {
+    const jwtTokenformlocalstore = this.localStorageService.getRefreshToken();
+    const expirationDate = this.getExpirationTimeFromToken(jwtTokenformlocalstore)
+    const timeout = (expirationDate.getTime() - Date.now()) / 1000 - (60 * 1000);
+    this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
+  }
+
+  private stopRefreshTokenTimer() {
+    clearTimeout(this.refreshTokenTimeout);
+  }
+
+  private handleAuthentication(user: User, jwtToken: string, refreshToken: string) {
+    const generatedUser = new User(user.id, user.email, jwtToken, user.favourite_recipes, user.created_recipes, user.custom_objects, user.settings, user.createdAt, user.updatedAt);
+    this.userSub$.next(generatedUser);
+    this.localStorageService.setToken(jwtToken);
+    this.localStorageService.setRefreshToken(refreshToken);
+    this.localStorageService.setUser(generatedUser);
+  }
+
+  getExpirationTimeFromToken(token: string | null) {
+    const refreshToken = JSON.parse(atob(token!.split('.')[1]));
+    return new Date(refreshToken.exp * 1000);
+  }
+
+  public getUser(): User | null {
+    return this.userSub$.value;       
   }
 
   handleError(errorRes: HttpErrorResponse) {

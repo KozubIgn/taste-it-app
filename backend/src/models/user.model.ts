@@ -1,8 +1,8 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 import { Recipe } from './recipe.model';
 
 export interface User {
-    id: string;
+    id: string | Types.ObjectId;
     email: string;
     password: string;
     favourite_recipes: Recipe[];
@@ -14,7 +14,7 @@ export interface User {
 export const UserSchema = new Schema<User>({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    favourite_recipes: [{type: Schema.ObjectId, ref: 'Recipe' }], // czy to z duzej litery czy z małej?
+    favourite_recipes: [{type: Schema.ObjectId, ref: 'Recipe' }],
     created_recipes: [{ type: Schema.ObjectId, ref: 'Recipe' }],
     custom_objects:[]
 }, {
