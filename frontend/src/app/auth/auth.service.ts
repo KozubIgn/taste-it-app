@@ -1,8 +1,4 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {
-  Auth,
-  GoogleAuthProvider, signInWithPopup
-} from '@angular/fire/auth';
 import { Injectable, inject } from '@angular/core';
 import {
 } from 'firebase/auth'
@@ -39,20 +35,6 @@ export class AuthService {
   private localStorageService: LocalStorageService = inject(LocalStorageService)
   public userSub$ = new BehaviorSubject<User | null>(null);
   private refreshTokenTimeout?: NodeJS.Timeout;
-  private autoLoginTimeout: any;
-
-  GoogleAuth() {
-    return signInWithPopup(this.auth, new GoogleAuthProvider())
-      .then((result) => {
-        const user = result.user;
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        this.handleAuthentication(user.uid, user.email!, token!, 3600)
-      })
-  }
-  logoutPopout() {
-    this.auth.signOut();
-  }
 
   signUp(email: string, password: string) {
     return this.http.post<AuthResponseData>(USER_SIGN_UP, { email: email, password: password, returnSecureToken: true })
@@ -132,7 +114,7 @@ export class AuthService {
   }
 
   public getUser(): User | null {
-    return this.userSub$.value;       
+    return this.userSub$.value;
   }
 
   handleError(errorRes: HttpErrorResponse) {
