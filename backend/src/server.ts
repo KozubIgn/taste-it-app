@@ -24,5 +24,5 @@ app.listen(PORT, () => {
 });
 app.use(cookieParser());
 app.use('/api/recipes', recipeRouter);
-app.use('/api/user', userRouter);
+app.use('/api/auth', userRouter);
 app.use('/api/tags', tagRouter);
