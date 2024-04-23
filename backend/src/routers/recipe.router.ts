@@ -88,6 +88,19 @@ router.post('/:userId/recipe/new', auth, asyncHandler(async (req: any, res: any)
 }
 ));
 
+router.delete('/:id/recipes/:recipeId', auth, asyncHandler(async (req: any, res: any) => {
+    try {
+        const user = await UserModel.findByIdAndUpdate(req.params.id,
+            { $pull: { created_recipes: req.params.recipeId } },
+            { new: true })
+            .populate<{ created_recipes: Recipe[] }>({ path: 'created_recipes', model: 'recipe' });
+        res.status(200).send({ message: 'The recipe has been removed from the list!', user: user });
+    } catch (error) {
+        return res.status(500).send(error)
+    }
+}
+));
+
 const tagExists = async (tagId: any): Promise<boolean> => {
     try {
         const existingTag = await TagModel.findById(tagId);
