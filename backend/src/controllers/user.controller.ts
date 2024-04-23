@@ -3,6 +3,7 @@ import { UserModel, User } from '../models/user.model';
 import * as jwt from 'jsonwebtoken';
 import { RefreshToken, RefreshTokenModel } from '../models/refreshToken.model';
 import { Types } from "mongoose";
+import { Recipe } from "../models/recipe.model";
 
 export const signup = async (req: any, res: any) => {
     const email = req.body.email;
@@ -32,7 +33,7 @@ export const signup = async (req: any, res: any) => {
 
 export const login = async (req: any, res: any) => {
     const { email, password } = req.body;
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email }).populate<{ created_recipes: Recipe[] }>({ path: 'created_recipes', model: 'recipe' });
     if (user && (await compare(password, user.password))) {
         const jwtToken = generateJwtTokenForUser(user.id);
         const refreshTokenModel = await generateRefreshTokenModel(user);
