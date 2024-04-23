@@ -104,7 +104,10 @@ const generateRefreshTokenModel = async (user: User) => {
 }
 
 const getUserFromRefreshToken = async (token: string) => {
-    const user = await RefreshTokenModel.findOne({ token: token }).populate<{ user: User }>({ path: 'user', model: 'user' }).orFail();
+    const user = await RefreshTokenModel.findOne({ token: token }).populate<{ user: User }>({
+        path: 'user',
+        populate: { path: 'created_recipes', model: 'recipe' }
+    }).orFail();
     if (!user || user.isExpired) throw new Error('Invalid token');
     return user.user;
 }

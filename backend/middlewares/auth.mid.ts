@@ -10,7 +10,7 @@ export async function auth(req: any, res: any, next: any) {
     try {
         const decodedUser = verify(token, process.env.JWT_SECRET!) as { id: string };
         const userId = decodedUser.id;
-        const user = await UserModel.findById(userId);
+        const user = await UserModel.findOne({ _id: userId });
         if (!user) {
             return res.status(401).json({ message: 'Unauthorized user' });
         }

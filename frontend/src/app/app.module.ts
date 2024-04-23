@@ -47,6 +47,3 @@ import { ErrorInterceptor } from './auth/error.interceptor';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
-
-

@@ -14,8 +14,8 @@ export interface User {
 export const UserSchema = new Schema<User>({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    favourite_recipes: [{type: Schema.ObjectId, ref: 'Recipe' }],
-    created_recipes: [{ type: Schema.ObjectId, ref: 'Recipe' }],
+    favourite_recipes: [{type: Schema.ObjectId, ref: 'recipe' }],
+    created_recipes: [{ type: Schema.ObjectId, ref: 'recipe' }],
     custom_objects:[]
 }, {
     toJSON: {
