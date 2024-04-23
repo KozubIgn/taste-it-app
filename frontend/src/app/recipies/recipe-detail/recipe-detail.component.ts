@@ -3,9 +3,8 @@ import { Recipe } from '../interfaces/recipe.interface';
 import { RecipeService } from '../services/recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogComponent } from 'src/app/components/dialogs/delete-dialog.component';
-import { TmplAstHoverDeferredTrigger } from '@angular/compiler';
 
 @Component({
   selector: 'app-recipe-detail',
