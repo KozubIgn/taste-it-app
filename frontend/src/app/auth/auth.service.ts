@@ -13,6 +13,7 @@ import { User } from './user.model';
 import { Router } from '@angular/router';
 import { REFRESH_TOKEN, REVOKE_TOKEN, USER_LOGIN, USER_SIGN_UP } from '../shared/constants/urls';
 import { LocalStorageService } from './local-storage.service';
+import { Observable } from 'rxjs';
 
 export interface AuthResponseData {
   jwtToken: string;
@@ -113,8 +114,8 @@ export class AuthService {
     return new Date(refreshToken.exp * 1000);
   }
 
-  public getUser(): User | null {
-    return this.userSub$.value;
+  public getUser$(): Observable<User| null> {
+    return this.userSub$.asObservable();
   }
 
   handleError(errorRes: HttpErrorResponse) {
