@@ -7,54 +7,24 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HomeStartComponent } from './home-start/home-start.component';
 import { RecipeDetailComponent } from './recipies/recipe-detail/recipe-detail.component';
 import { RecipieListComponent } from './recipies/recipie-list/recipe-list.component';
-import { RecipesResolverService } from './recipies/services/recipes-resolver.service';
+import { AuthComponent } from './auth/auth.component';
 
 const appRoutes: Routes = [
-  { path: '', redirectTo: '/auth', pathMatch: 'full' },
-
-  // {
-  //   path: 'recipes',
-  //   component: RecipieListComponent,
-  //   canActivate: [AuthGuard],
-  //   children: [
-  //     { path: '', component: RecipeStartComponent },
-  //     { path: 'new', component: RecipeEditComponent },
-  //     {
-  //       path: ':id',
-  //       component: RecipeDetailComponent,
-  //       resolve: [ReciepesResolverService],
-  //     },
-  //     {
-  //       path: ':id/edit',
-  //       component: RecipeEditComponent,
-  //       resolve: [ReciepesResolverService],
-  //     },
-  //   ],
-  // },
+  { path: 'auth', component: AuthComponent },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
-    canActivate: [AuthGuard],
+    path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard],
     children: [
       { path: '', component: HomeStartComponent },
       { path: 'recipes', component: RecipieListComponent, },
       { path: 'recipes/new', component: RecipeFormComponent },
-      { path: 'recipes/view', component: RecipeDetailComponent,
-        // resolve: [RecipesResolverService],
-      },
-      {
-        path: 'recipes/view/edit',
-        component: RecipeFormComponent,
-        // resolve: [RecipesResolverService],
-      },
+      { path: 'recipes/view', component: RecipeDetailComponent },
+      { path: 'recipes/view/edit', component: RecipeFormComponent },
       { path: 'new', component: RecipeFormComponent },
       { path: 'shopping-list', component: ShoppingListComponent },
     ],
   },
-
   { path: 'shopping-list', component: ShoppingListComponent },
-
-  // {path: '**', redirectTo: 'recipes'}
+  { path: '**', redirectTo: 'dashboard' }
 ];
 
 @NgModule({

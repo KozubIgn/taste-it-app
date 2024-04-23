@@ -15,12 +15,6 @@ export class AuthComponent {
 
   constructor(private authService: AuthService, private router: Router) { }
 
-  loginWithGoogle() {
-    this.authService.GoogleAuth().then(() => {
-      this.router.navigate(['/dashboard']);
-    })
-  }
-
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
   }

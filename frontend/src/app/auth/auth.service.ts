@@ -1,141 +1,121 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {
-  Auth,
-  GoogleAuthProvider, signInWithPopup
-} from '@angular/fire/auth';
 import { Injectable, inject } from '@angular/core';
 import {
 } from 'firebase/auth'
 import {
   BehaviorSubject,
   catchError,
+  map,
   tap,
   throwError,
 } from 'rxjs';
 import { User } from './user.model';
 import { Router } from '@angular/router';
-import { USER_LOGIN, USER_SIGN_UP } from '../shared/constants/urls';
+import { REFRESH_TOKEN, REVOKE_TOKEN, USER_LOGIN, USER_SIGN_UP } from '../shared/constants/urls';
+import { LocalStorageService } from './local-storage.service';
+import { Observable } from 'rxjs';
 
 export interface AuthResponseData {
-  token: string;
-  email: string;
+  jwtToken: string;
   refreshToken: string;
-  expiresIn: string;
-  id: string;
+  user: User;
   registered?: boolean;
+}
+
+export interface LocalStoreUserData {
+  id: string;
+  email: string;
+  _token: string;
+  _tokenExpirationTime: number;
 }
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private auth: Auth = inject(Auth);
   private http: HttpClient = inject(HttpClient)
   private router: Router = inject(Router)
-  user$ = new BehaviorSubject<User | null>(null);
-  tokenExpirationTimer: any;
-
-  GoogleAuth() {
-    return signInWithPopup(this.auth, new GoogleAuthProvider())
-      .then((result) => {
-        const user = result.user;
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential?.accessToken;
-        this.handleAuthentication(user.uid, user.email!, token!, 3600)
-      })
-  }
-  logoutPopout() {
-    this.auth.signOut();
-  }
+  private localStorageService: LocalStorageService = inject(LocalStorageService)
+  public userSub$ = new BehaviorSubject<User | null>(null);
+  private refreshTokenTimeout?: NodeJS.Timeout;
 
   signUp(email: string, password: string) {
-    return this.http
-      .post<AuthResponseData>(
-        USER_SIGN_UP,
-        {
-          email: email,
-          password: password,
-          returnSecureToken: true,
-        }
-      )
+    return this.http.post<AuthResponseData>(USER_SIGN_UP, { email: email, password: password, returnSecureToken: true })
       .pipe(
         catchError(this.handleError),
         tap((resData) => {
           this.handleAuthentication(
-            resData.id,
-            resData.email,
-            resData.token,
-            +resData.expiresIn
+            resData.user,
+            resData.jwtToken,
+            resData.refreshToken,
           );
+          this.startRefreshTokenTimer();
         })
       );
   }
 
   logIn(email: string, password: string) {
-    return this.http.post<AuthResponseData>(
-      USER_LOGIN,
-      {
-        email: email,
-        password: password,
-      }
-    )
+    return this.http.post<any>(USER_LOGIN, { email: email, password: password }, { withCredentials: true })
       .pipe(
         catchError(this.handleError),
         tap((resData) => {
           this.handleAuthentication(
-            resData.id,
-            resData.email,
-            resData.token,
-            +resData.expiresIn
+            resData.user,
+            resData.jwtToken,
+            resData.refreshToken,
           );
+          this.startRefreshTokenTimer();
         })
       );
   }
 
-  autoLogin() {
-    const localStoreUserData: {
-      id: string;
-      email: string;
-      _token: string;
-      _tokenExpirationDate: string;
-    } = JSON.parse(localStorage.getItem('userData') || '{}');
-    if (!localStoreUserData) {
-      return;
-    }
-    const loadedUser = new User(
-      localStoreUserData.id,
-      localStoreUserData.email,
-      localStoreUserData._token,
-      new Date(localStoreUserData._tokenExpirationDate)
-    );
-    if (loadedUser.token) {
-      this.user$.next(loadedUser);
-      const expirationDuration =
-        new Date(localStoreUserData._tokenExpirationDate).getTime() -
-        new Date().getTime();
-      this.autoLogout(expirationDuration);
-    }
-  }
-
   logOut() {
-    this.user$.next(null);
-    this.router.navigate(['/auth']);
-    localStorage.removeItem('userData');
-    if (this.tokenExpirationTimer) {
-      clearTimeout(this.tokenExpirationTimer);
+    if (this.userSub$) {
+      this.http.post<any>(REVOKE_TOKEN, {}, { withCredentials: true }).subscribe()
+      this.stopRefreshTokenTimer();
+      this.userSub$.next(null);
+      this.localStorageService.clearAll();
+      this.router.navigate(['/auth']);
     }
-    this.tokenExpirationTimer = null;
   }
 
-  autoLogout(expirationDuration: number) {
-    this.tokenExpirationTimer = setTimeout(() => {
-      this.logOut();
-    }, expirationDuration);
+  refreshToken() {
+    return this.http.post<any>(REFRESH_TOKEN, {}, { withCredentials: true })
+      .pipe(map((response) => {
+        this.userSub$.next(response.user);
+        this.startRefreshTokenTimer();
+        this.localStorageService.updateUserToken(response.user.token);
+        this.localStorageService.setToken(response.jwtToken);
+        this.localStorageService.setRefreshToken(response.refreshToken);
+        return response.user;
+      }),
+      )
   }
 
-  private handleAuthentication(localId: string, email: string, token: string, expiresIn: number) {
-    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-    const user = new User(localId, email, token, expirationDate);
-    this.user$.next(user);
-    localStorage.setItem('userData', JSON.stringify(user));
+  private startRefreshTokenTimer() {
+    const jwtTokenformlocalstore = this.localStorageService.getRefreshToken();
+    const expirationDate = this.getExpirationTimeFromToken(jwtTokenformlocalstore)
+    const timeout = (expirationDate.getTime() - Date.now()) / 1000 - (60 * 1000);
+    this.refreshTokenTimeout = setTimeout(() => this.refreshToken().subscribe(), timeout);
+  }
+
+  private stopRefreshTokenTimer() {
+    clearTimeout(this.refreshTokenTimeout);
+  }
+
+  private handleAuthentication(user: User, jwtToken: string, refreshToken: string) {
+    const generatedUser = new User(user.id, user.email, jwtToken, user.favourite_recipes, user.created_recipes, user.custom_objects, user.settings, user.createdAt, user.updatedAt);
+    this.userSub$.next(generatedUser);
+    this.localStorageService.setToken(jwtToken);
+    this.localStorageService.setRefreshToken(refreshToken);
+    this.localStorageService.setUser(generatedUser);
+  }
+
+  getExpirationTimeFromToken(token: string | null) {
+    const refreshToken = JSON.parse(atob(token!.split('.')[1]));
+    return new Date(refreshToken.exp * 1000);
+  }
+
+  public getUser$(): Observable<User| null> {
+    return this.userSub$.asObservable();
   }
 
   handleError(errorRes: HttpErrorResponse) {
