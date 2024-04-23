@@ -5,6 +5,7 @@ import { Tag, TagModel } from '../models/tag.model';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Ingredient } from '../models/ingredient.model';
 import { auth } from '../../middlewares/auth.mid';
+import { UserModel } from '../models/user.model';
 const router = Router();
 
 router.get('/', asyncHandler(async (req, res) => {
@@ -34,7 +35,8 @@ router.get('/:id', asyncHandler(async (req, res) => {
 }
 ));
 
-router.post('/new', auth, asyncHandler(async (req: any, res: any) => {
+router.post('/:userId/recipe/new', auth, asyncHandler(async (req: any, res: any) => {
+    const { userId } = req.params;
     const newRecipeData: Recipe = req.body;
     try {
         const user = jwt.verify(req.headers.access_token, process.env.JWT_SECRET!) as JwtPayload
@@ -64,6 +66,10 @@ router.post('/new', auth, asyncHandler(async (req: any, res: any) => {
             }
         });
         const savedTags = await Promise.all(tags);
+        const userDoc = await UserModel.findOne({ _id: userId });
+         if (!userDoc) {
+            return res.status(404).send('User not found');
+        }
         const newRecipe = new RecipeModel({
             ...newRecipeData,
             created_by: user.id,
@@ -72,7 +78,10 @@ router.post('/new', auth, asyncHandler(async (req: any, res: any) => {
             ingredients: ingredients
         });
         await newRecipe.save();
-        res.status(200).send(newRecipe)
+        userDoc.created_recipes.push(newRecipe);
+        await userDoc.save();
+        await userDoc!.populate<{ created_recipes: Recipe[] }>({ path: 'created_recipes', model: 'recipe' });
+        res.status(200).send(userDoc)
     } catch (error) {
         res.status(400).send(error)
     }
