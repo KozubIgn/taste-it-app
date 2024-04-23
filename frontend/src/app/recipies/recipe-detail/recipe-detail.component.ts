@@ -40,7 +40,7 @@ export class RecipeDetailComponent {
     }
     this.router.navigate(['edit'], { relativeTo: this.route });
   }
-  onDeleteRecipe(id: number) {
+  onDeleteRecipe(id: string) {
     this.recipeService.deleteRecipe(id);
     this.router.navigate(['/recipes']);
   }
