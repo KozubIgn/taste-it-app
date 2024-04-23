@@ -45,7 +45,7 @@ export class RecipeDetailComponent {
     this.router.navigate(['/recipes']);
   }
 
-  openModalDialog() {
+  openDeleteModalDialog() {
     const dialogRef = this.dialog.open(DeleteDialogComponent, { data: this.recipe});
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
