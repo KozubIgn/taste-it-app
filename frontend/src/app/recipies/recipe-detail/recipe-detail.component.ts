@@ -41,7 +41,7 @@ export class RecipeDetailComponent {
   }
   onDeleteRecipe(id: string) {
     this.recipeService.deleteRecipe(id);
-    this.router.navigate(['/recipes']);
+    this.router.navigate(['/dashboard/recipes']);
   }
 
   openDeleteModalDialog() {
