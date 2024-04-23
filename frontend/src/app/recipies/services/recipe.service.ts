@@ -14,7 +14,6 @@ export class RecipeService {
   private recipesSubject$ = new BehaviorSubject<Recipe[]>([]);
   recipes$: Observable<Recipe[]> | undefined = this.recipesSubject$.asObservable();
   private recipes: Recipe[] = [];
-  basePath: string = 'https://taste-eat-app-default-rtdb.europe-west1.firebasedatabase.app/';
   shoppingListService: any;
 
   constructor(private http: HttpClient, private authService: AuthService) {
