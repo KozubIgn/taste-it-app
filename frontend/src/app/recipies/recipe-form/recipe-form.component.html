@@ -114,6 +114,8 @@
                 <button class="btn btn-danger" type="button" (click)="onDeleteIngredient(i)">
                   x </button>
               </div>
+              <span *ngIf="areIngredientsInvalid()" class="error-message">
+                Ingredient name and amount required.</span>
             </div>
             <div class="row">
               <div class="col-xs-12">
