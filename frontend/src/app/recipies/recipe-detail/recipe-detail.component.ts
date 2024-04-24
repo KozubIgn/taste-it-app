@@ -3,6 +3,8 @@ import { Recipe } from '../interfaces/recipe.interface';
 import { RecipeService } from '../services/recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, map } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteDialogComponent } from 'src/app/components/dialogs/delete-dialog.component';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -19,7 +21,8 @@ export class RecipeDetailComponent {
   constructor(
     private recipeService: RecipeService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit() {
@@ -36,8 +39,17 @@ export class RecipeDetailComponent {
     }
     this.router.navigate(['edit'], { relativeTo: this.route });
   }
-  onDeleteRecipe() {
-    this.recipeService.deleteRecipe(this.id!);
-    this.router.navigate(['/recipes']);
+  onDeleteRecipe(id: string) {
+    this.recipeService.deleteRecipe(id);
+    this.router.navigate(['/dashboard/recipes']);
+  }
+
+  openDeleteModalDialog() {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: this.recipe});
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.onDeleteRecipe(result);
+      }
+    });
   }
 }

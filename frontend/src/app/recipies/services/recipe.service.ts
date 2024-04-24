@@ -3,7 +3,7 @@ import { Recipe } from '../interfaces/recipe.interface';
 import { Ingredient } from 'src/app/shared/interfaces/ingredient.interface';
 import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { RECIPES, RECIPE_ADD_NEW } from 'src/app/shared/constants/urls';
+import { RECIPES, RECIPE_ADD_NEW, RECIPE_DELETE } from 'src/app/shared/constants/urls';
 import { User } from 'src/app/auth/user.model';
 import { AuthService } from '../../auth/auth.service';
 
@@ -73,9 +73,16 @@ export class RecipeService {
     this.recipesChanged$.next(this.recipes.slice());
   }
 
-  deleteRecipe(index: number) {
-    this.recipes.splice(index, 1);
-    this.recipesChanged$.next(this.recipes.slice());
+  deleteRecipe(id: string) {
+    const user = localStorage.getItem('user');
+    const userObj: User = JSON.parse(user!);
+    this.http.delete(RECIPE_DELETE(userObj.id, id)).pipe(
+      map((response: any) => {
+        if (response.user) {
+          this.recipesSubject$.next(response.user.created_recipes);
+        }
+      })
+    ).subscribe();
   }
 }
 
