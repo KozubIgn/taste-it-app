@@ -1,7 +1,13 @@
-input.ng-invalid, ng-touched,
-textarea.ng-invalid, ng-touched{
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
     border: 1px solid rgb(255, 55, 0);
 }
+
 .row {
     margin: 5px 0;
+}
+
+.error-message {
+    font-size: small;
+    color: rgb(255, 55, 0);
 }
