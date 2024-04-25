@@ -73,16 +73,17 @@
         <div class="py-2 px-1.5">
           <label class="pl-2 py-0.5" for="cookTime">Ingredients</label>
           <div formArrayName="ingredients">
-            <div class="row" *ngFor="let ingredientControl of controls; let i = index" [formGroupName]="i">
-              <div class="col-sm-8">
+            <div class="ml-3 shrink flex items-center" *ngFor="let ingredientControl of controls; let i = index"
+              [formGroupName]="i">
+              <div>
                 <input type="text" class="form-control" formControlName="name" />
               </div>
-              <div class="col-sm-2">
+              <div class=" ml-3 w-14">
                 <input type="number" class="form-control" formControlName="amount" />
               </div>
-              <div class="col-sm-2">
-                <button class="btn btn-danger" type="button" (click)="onDeleteIngredient(i)">
-                  x </button>
+              <div>
+                <button mat-icon-button color="warn" type="button" (click)="onDeleteIngredient(i)">
+                  <fa-icon class="flex items-center" [icon]="['fas', 'xmark']"></fa-icon></button>
               </div>
             </div>
             <div class="py-2 px-1.5">
