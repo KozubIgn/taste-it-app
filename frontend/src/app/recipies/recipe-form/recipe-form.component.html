@@ -114,7 +114,7 @@
                 <button class="btn btn-danger" type="button" (click)="onDeleteIngredient(i)">
                   x </button>
               </div>
-              <span *ngIf="areIngredientsInvalid()" class="error-message">
+              <span *ngIf="isInvalid(ingredientControl.get('name')) || isInvalid(ingredientControl.get('amount'))" class="error-message">
                 Ingredient name and amount required.</span>
             </div>
             <div class="row">

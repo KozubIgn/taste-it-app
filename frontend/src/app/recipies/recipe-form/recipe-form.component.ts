@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeService } from '../services/recipe.service';
 import { Tag } from '../../shared/interfaces/tag.interface';
@@ -156,9 +156,8 @@ export class RecipeFormComponent implements OnInit {
     );
   }
 
-  areIngredientsInvalid(): boolean {
-    const ingredientsArray = this.recipeForm.get('ingredients') as FormArray;
-    return ingredientsArray && ingredientsArray.controls.some(control => control.invalid && control.touched);
+  isInvalid(control: AbstractControl | null): boolean {
+    return !!control && control.invalid && (control.touched || control.dirty);
   }
 
   onDeleteIngredient(index: number) {
