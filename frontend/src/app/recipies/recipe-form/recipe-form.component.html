@@ -10,8 +10,8 @@
             <div class="form-group">
               <label for="name">Name</label>
               <input type="text" id="name" formControlName="name" class="form-control" />
-              <span *ngIf="!recipeForm.get('name')?.valid && recipeForm.get('name')?.touched">Please enter the recipe
-                name</span>
+              <span *ngIf="!recipeForm.get('name')?.valid && recipeForm.get('name')?.touched" class="error-message">
+                Recipe must have a name.</span>
             </div>
           </div>
         </div>
@@ -114,6 +114,8 @@
                 <button class="btn btn-danger" type="button" (click)="onDeleteIngredient(i)">
                   x </button>
               </div>
+              <span *ngIf="areIngredientsInvalid()" class="error-message">
+                Ingredient name and amount required.</span>
             </div>
             <div class="row">
               <div class="col-xs-12">
