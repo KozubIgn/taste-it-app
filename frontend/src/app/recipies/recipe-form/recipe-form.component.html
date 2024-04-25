@@ -85,7 +85,7 @@
                 <button mat-icon-button color="warn" type="button" (click)="onDeleteIngredient(i)">
                   <fa-icon class="flex items-center" [icon]="['fas', 'xmark']"></fa-icon></button>
               </div>
-              <span *ngIf="areIngredientsInvalid()" class="error-message">
+              <span *ngIf="isInvalid(ingredientControl.get('name')) || isInvalid(ingredientControl.get('amount'))" class="error-message">
                 Ingredient name and amount required.</span>
             </div>
             <div class="py-2 px-1.5">
