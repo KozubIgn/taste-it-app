@@ -156,6 +156,11 @@ export class RecipeFormComponent implements OnInit {
     );
   }
 
+  areIngredientsInvalid(): boolean {
+    const ingredientsArray = this.recipeForm.get('ingredients') as FormArray;
+    return ingredientsArray && ingredientsArray.controls.some(control => control.invalid && control.touched);
+  }
+
   onDeleteIngredient(index: number) {
     (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
   }
