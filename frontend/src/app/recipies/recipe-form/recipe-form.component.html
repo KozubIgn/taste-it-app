@@ -3,138 +3,109 @@
     <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
   </div>
   <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
-    <div class="row pg-row flex">
-      <div class="column">
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" formControlName="name" class="form-control" />
-              <span *ngIf="!recipeForm.get('name')?.valid && recipeForm.get('name')?.touched" class="error-message">
-                Recipe must have a name.</span>
+    <div class="pg-row xl:flex flex-row">
+      <div class="w-full xl:w-1/2">
+        <div class="py-2 px-1.5">
+          <label class="pl-2 py-0.5" for="name">Name</label>
+          <div class="ml-3">
+            <input type="text" id="name" formControlName="name" class="form-control" placeholder="Vegetable Lasagna" />
+            <p *ngIf="!recipeForm.get('name')?.valid && recipeForm.get('name')?.touched" class="error-message">
+              Recipe must have a name.</p>
+          </div>
+        </div>
+        <div class="py-2 px-1.5">
+          <label class="pl-2 py-0.5" for="description">Description</label>
+          <div class="ml-3"> <textarea type="text" id="description" formControlName="description" rows="6"
+              class="form-control" placeholder="Wholesome hearty winter lasagna recipe"></textarea></div>
+        </div>
+        <div class="py-2 px-1.5">
+          <div class="ml-3"> <app-file-upload id="imagePath" formControlName="imagePath" [(ngModel)]="uploadedFiles"
+              (uploadedFile$)="handleUploadedFile($event)"></app-file-upload></div>
+        </div>
+        <div class="py-2 px-1.5">
+          <label class="pl-2 py-0.5" for="tags">Tags</label>
+          <div class="ml-3"> <mat-chip-listbox multiple="true" formControlName="tags" *ngIf="tags">
+              <mat-chip-option color="primary" *ngFor="let tag of tags" [value]="tag.id"
+                [selected]="isTagSelected(tag)">
+                {{tag.name}}
+              </mat-chip-option>
+            </mat-chip-listbox>
+          </div>
+        </div>
+      </div>
+      <div class="xl:w-1/2">
+        <div class="py-2 px-1.5">
+          <label class="pl-2 py-0.5" for="note">Recipe notes</label>
+          <div class="ml-3"> <textarea type="text" id="note" formControlName="note" rows="6" class="form-control"
+              placeholder="Best served with crusty garlic bread"></textarea></div>
+        </div>
+        <div class="py-2 px-1.5">
+          <label class="pl-2 py-0.5" for="instruction">Instructions</label>
+          <div class="ml-3"> <textarea type="text" id="instruction" formControlName="instruction" rows="6"
+              class="form-control" placeholder="1. Wash and dice the carrots, tomatoes and mushrooms."></textarea></div>
+        </div>
+        <div class="py-2 px-1.5">
+          <label class="pl-2 py-0.5" for="favourites">Favourite</label>
+          <mat-slide-toggle class="ml-1" color="primary" hideIcon="true"
+            formControlName="favourites"></mat-slide-toggle>
+        </div>
+        <div class="py-2 px-1.5 max-w-64 flex flex-col">
+          <label class="pl-2 py-0.5" for="vield">Yield</label>
+          <div class="ml-3 flex">
+            <input type="number" class="form-control mr-4 max-w-16" formControlName="vield" min="0" placeholder="1" />
+            <input type="text" class="form-control" id="vieldType" formControlName="vieldType" placeholder="serves" />
+          </div>
+        </div>
+        <div class="py-2 px-1.5 max-w-64 flex">
+          <div class="flex flex-col">
+            <label class=" pl-2 py-0.5" for="prepTime">Prep time</label>
+            <div class="ml-3"> <input type="number" class="form-control" formControlName="prepTime" min="0"
+                placeholder="00" />
+            </div>
+          </div>
+          <div class="flex flex-col">
+            <label class=" pl-2 py-0.5" for="cookTime">Cook time</label>
+            <div class="ml-3"><input type="number" class="form-control" formControlName="cookTime" min="0"
+                placeholder="00" />
             </div>
           </div>
         </div>
-
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="description">Description</label>
-              <textarea type="text" id="description" formControlName="description" rows="6"
-                class="form-control"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-
-              <app-file-upload id="imagePath" formControlName="imagePath" [(ngModel)]="uploadedFiles"
-                (uploadedFile$)="handleUploadedFile($event)"></app-file-upload>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="tags">Tags</label>
-              <mat-chip-listbox multiple="true" formControlName="tags" *ngIf="tags">
-                <mat-chip-option color="primary" *ngFor="let tag of tags" [value]="tag.id" [selected]="isTagSelected(tag)">
-                  {{tag.name}}
-                </mat-chip-option>
-              </mat-chip-listbox>
+        <div class="py-2 px-1.5">
+          <label class="pl-2 py-0.5" for="cookTime">Ingredients</label>
+          <div formArrayName="ingredients">
+            <ng-container *ngFor="let ingredientControl of controls; let i = index">
+              <div class="ml-3 shrink flex items-center" [formGroupName]="i">
+                <div>
+                  <input type="text" class="form-control" formControlName="name" />
+                </div>
+                <div class="ml-3 w-14">
+                  <input type="number" class="form-control" formControlName="amount" min="0" />
+                </div>
+                <div>
+                  <button mat-icon-button color="warn" type="button" (click)="onDeleteIngredient(i)">
+                    <fa-icon class="flex items-center" [icon]="['fas', 'xmark']"></fa-icon></button>
+                </div>
+              </div>
+              <p *ngIf="isInvalid(ingredientControl.get('name')) || isInvalid(ingredientControl.get('amount'))"
+                class="error-message ml-3">
+                Ingredient name and amount required.</p>
+            </ng-container>
+            <div class="py-2 px-1.5">
+              <button mat-raised-button color="basic" type="button" (click)="onAddIngredient()">
+                Add Ingredient
+              </button>
             </div>
           </div>
         </div>
       </div>
-
-      <div class="column">
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="note">Note</label>
-              <textarea type="text" id="note" formControlName="note" rows="6" class="form-control"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="instruction">Instruction</label>
-              <textarea type="text" id="instruction" formControlName="instruction" rows="6"
-                class="form-control"></textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="form-group">
-              <label for="favourites">Favourites</label>
-              <mat-slide-toggle color="primary" hideIcon="true" formControlName="favourites"></mat-slide-toggle>
-            </div>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-3">
-            <label for="vield">Vield</label>
-            <input type="number" class="form-control" formControlName="vield" placeholder="0" />
-          </div>
-          <div class="col-sm-3">
-            <div class="form-group">
-              <label for="vieldType"></label>
-              <input class="form-control" type="text" id="vieldType" formControlName="vieldType" placeholder="serves" />
-            </div>
-          </div>
-
-          <div class="col-sm-3">
-            <label for="prepTime">PrepTime</label>
-            <input type="number" class="form-control" formControlName="prepTime" placeholder="00" />
-          </div>
-
-          <div class="col-sm-3">
-            <label for="cookTime">CookTime</label>
-            <input type="number" class="form-control" formControlName="cookTime" placeholder="00" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-xs-12" formArrayName="ingredients">
-            <div class="row" *ngFor="let ingredientControl of controls; let i = index" [formGroupName]="i">
-              <div class="col-sm-8">
-                <input type="text" class="form-control" formControlName="name" />
-
-              </div>
-              <div class="col-sm-2">
-                <input type="number" class="form-control" formControlName="amount" />
-              </div>
-              <div class="col-sm-2">
-                <button class="btn btn-danger" type="button" (click)="onDeleteIngredient(i)">
-                  x </button>
-              </div>
-              <span *ngIf="isInvalid(ingredientControl.get('name')) || isInvalid(ingredientControl.get('amount'))" class="error-message">
-                Ingredient name and amount required.</span>
-            </div>
-            <div class="row">
-              <div class="col-xs-12">
-                <button mat-raised-button color="basic" type="button" (click)="onAddIngredient()">
-                  Add Ingredient
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-xs-12">
-        <button mat-raised-button color="primary" type="submit" [disabled]="!recipeForm.valid">
-          Save
-        </button>
-        <button mat-raised-button color="basic" type="button" (click)="onCancel()">
-          Cancel
-        </button>
-      </div>
+    </div>
+    <div class="py-2 px-1.5">
+      <button mat-raised-button class="mr-1" color="primary" type="submit" [disabled]="!recipeForm.valid">
+        Save
+      </button>
+      <button mat-raised-button color="basic" type="button" (click)="onCancel()">
+        Cancel
+      </button>
     </div>
   </form>
 </div>

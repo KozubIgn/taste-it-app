@@ -4,6 +4,13 @@ module.exports = {
     "./src/**/*.{html,ts}",
   ],
   theme: {
+    screens: {
+      sm: '480px',
+      md: '768px',
+      lg: '976px',
+      xl: '1024px',
+      xxl: '1440px',
+    },
     extend: {
       colors: {
         primaryCol: '#9C27B0',

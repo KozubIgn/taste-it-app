@@ -16,20 +16,10 @@
     margin: 10px 0;
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.8em;
     background-color: $background-color;
-    border: dotted 1px #aaa;
     border-radius: 6px;
-
-    img {
-      height: auto;
-      width: 150px;
-      max-width: 150px;
-      object-fit: contain;
-      border: 1px solid #d3d3d3;
-      background-color: #fff;
-    }
   }
 
   input {
@@ -37,9 +27,8 @@
   }
 
   button {
-    margin-top: 10px 0;
     cursor: pointer;
-
+    background-color: transparent;
   }
 
   .textLink::before {
@@ -76,7 +65,35 @@
   }
 
   .preview {
-    max-width: 100px;
-    vertical-align: middle;
+    &:before {
+      content: '';
+      position: absolute;
+      height: 0%;
+      width: 100%;
+      transition: height ease;
+      background: linear-gradient(to bottom, rgba(93, 93, 93, 0.6), transparent 100%);
+    }
+
+    fa-icon {
+      visibility: hidden;
+    }
+
+    &:hover {
+      fa-icon {
+        visibility: visible;
+      }
+
+      &:before {
+        height: 30px;
+      }
+    }
+  }
+
+  img {
+    height: auto;
+    width: 150px;
+    max-width: 150px;
+    object-fit: contain;
+    background-color: #fff;
   }
 }
