@@ -2,83 +2,81 @@
   <div>
     <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
   </div>
-  <div class="pg-row flex">
-
+  <div class="flex flex-col justify-center">
     <ng-container *ngIf="recipe$ | async as recipe">
-      <div class="options full right">
-        <a style="cursor: pointer" (click)="onAddToShoppingList()">
-          <button mat-button color="primary">
-            <fa-icon [icon]="['fas', 'basket-shopping']"></fa-icon> To shopping list</button></a>
-        <a style="cursor: pointer" (click)="onEditRecipe()">
-          <button mat-button color="primary">
-            <fa-icon [icon]="['fas', 'pen-to-square']"></fa-icon> Edit</button></a>
-        <a style="cursor: pointer" (click)="openDeleteModalDialog()">
-          <button mat-button color="primary">
-            <fa-icon [icon]="['fas', 'trash-can']"></fa-icon> Delete</button></a>
-      </div>
-      <div class="recipe-view">
-        <div class="recipe-about">
-          <div class="column recipe-images">
-            <div class="col-xs-12" *ngIf="recipe.imagePath">
-              <img *ngFor="let image of recipe.imagePath" [src]="image.url" alt="{{recipe?.name}}"
-                class="img-responsive" style="max-height:320px"/>
-            </div>
+      <div class="lg:grid lg:grid-cols-12">
+        <div class="flex flex-row justify-center py-2 px-3 lg:flex lg:justify-end lg:col-span-5 lg:col-end-13">
+          <a class="no-underline flex flex-row" style="cursor: pointer" (click)="onAddToShoppingList()">
+            <button mat-button color="primary">
+              <fa-icon [icon]="['fas', 'basket-shopping']"></fa-icon> To shopping list</button></a>
+          <a style="cursor: pointer" (click)="onEditRecipe()">
+            <button mat-button color="primary">
+              <fa-icon [icon]="['fas', 'pen-to-square']"></fa-icon> Edit</button></a>
+          <a style="cursor: pointer" (click)="openDeleteModalDialog()">
+            <button mat-button color="primary">
+              <fa-icon [icon]="['fas', 'trash-can']"></fa-icon> Delete</button></a>
+        </div>
+        <div class=" flex flex-col justify-center lg:flex-row lg:justify-center lg:col-span-7 lg:col-end-6">
+          <div *ngIf="recipe.imagePath">
+            <img *ngFor="let image of recipe.imagePath" [src]="image.url" alt="{{recipe?.name}}"
+              class="object-cover w-full max-h-72 lg:min-w-80 lg:object-fit" />
           </div>
-          <div class="recipe-info-row">
-              <h3>{{recipe?.name}}</h3>
-            <div class="recipe-info-row">
-              <div class="item-row">
-                <fa-icon [icon]="['fas', 'clock']"></fa-icon>
-              <span>Prep: {{recipe?.prepTime}} mins</span>  
+        </div>
+        <div class=" flex flex-col justify-center lg:flex-row lg:justify-start lg:col-span-7 lg:col-end-13">
+          <div class="flex flex-col justify-center">
+            <div>
+              <h3 class="text-center lg:text-left">{{recipe?.name}}</h3>
+            </div>
+            <div class="flex flex-row justify-evenly px-3 py-2 lg:justify-start">
+              <div class="flex flex-col items-center lg:flex-row lg:mr-2 ">
+                <fa-icon class="ml-2" [icon]="['fas', 'blender']"></fa-icon>
+                <p class="ml-2 lg:my-0"><b>Prep:</b> {{recipe?.prepTime}} mins</p>
               </div>
-              <div class="item-row">
-                <fa-icon [icon]="['fas', 'fire-burner']"></fa-icon>
-               <span>Cook: {{recipe?.cookTime}} mins</span> 
+              <div class="flex flex-col items-center lg:flex-row lg:mr-2">
+                <fa-icon class="ml-2" [icon]="['fas', 'fire-burner']"></fa-icon>
+                <p class="ml-2 lg:my-0"><b>Cook:</b> {{recipe?.cookTime}} mins</p>
               </div>
-              <div class="item-row">
-                <fa-icon [icon]="['fas', 'bowl-food']"></fa-icon>
-               <span>{{recipe?.vield}} {{recipe?.vieldType}}</span> 
+              <div class="flex flex-col items-center lg:flex-row lg:mr-2">
+                <fa-icon class="ml-2" [icon]="['fas', 'bowl-rice']"></fa-icon>
+                <p class="ml-2 lg:my-0"><b>{{recipe?.vieldType}}:</b> {{recipe?.vield}}</p>
               </div>
-              <div class="item-row">
-                <fa-icon [icon]="['fas', 'carrot']"></fa-icon>
-                <span>{{recipe?.ingredients?.length}} Ingredients</span>
+              <div class="flex flex-col items-center lg:flex-row lg:mr-2">
+                <fa-icon class="ml-2" [icon]="['fas', 'carrot']"></fa-icon>
+                <p class="ml-2 lg:my-0"><b>Ingredients:</b> {{recipe?.ingredients?.length}}</p>
               </div>
             </div>
-            <div class="recipe-info-row" *ngIf="recipe.tags as tags">
-              <div class="recipe-boxes">
-                <button *ngFor="let tag of tags" mat-stroked-button color="primary">{{tag.name}}</button>
+            <div class="flex flex-row justify-start p-3" *ngIf="recipe.tags as tags">
+              <div class="flex flex-row justify-start">
+                <button class="mr-3" *ngFor="let tag of tags" mat-stroked-button color="primary">{{tag.name}}</button>
               </div>
             </div>
-            <div class="recipe-info-row">
-              <h4>Description</h4><span>{{recipe?.description}}</span>
+            <div class="p-3">
+              <h4>Description</h4>
+              <p class="ml-4">{{recipe?.description}}</p>
             </div>
           </div>
         </div>
-
-        <div class="recipe-cooking">
-
-          <div class="recipe-ingredients">
-
-          <div class="recipe-info-row">
+      </div>
+      <div class="flex flex-column">
+        <div class="flex flex-column px-3 py-2 shadow-[0_24px_3px_-24px_rgb(156,39,176)]">
+          <div class="">
             <h4>Ingredients</h4>
           </div>
-          <div class="recipe-info-row">
-            <ul class="row-list">
-              <li class="list-item" *ngFor="let ingredient of recipe?.ingredients">
-                <span><b>{{ingredient.amount}}</b> {{ingredient.name}}</span>
-              </li>
-            </ul>
-          </div>
+          <ul class="flex flex-column flex-wrap overflow-auto max-h-64 pl-4">
+            <li class="list-item odd:bg-fontLabel pl-4 mr-4 w-1/2" *ngFor="let ingredient of recipe?.ingredients">
+              <b>{{ingredient.amount}}</b> {{ingredient.name}}
+            </li>
+          </ul>
         </div>
-
         <div class="recipe-instruction">
-          <div class="recipe recipe-info-row">
-            <h4>Instruction</h4><span>{{recipe?.instruction}}</span>
+          <div class="px-3 py-2">
+            <h4>Instruction</h4>
+            <p class="ml-4">{{recipe?.instruction}}</p>
           </div>
-          <div class="recipe-info-row">
-            <h4>Note</h4><span>{{recipe?.note}}</span>
+          <div class="px-3 py-2">
+            <h4>Note</h4>
+            <p class="ml-4">{{recipe?.note}}</p>
           </div>
-        </div>
         </div>
       </div>
     </ng-container>
