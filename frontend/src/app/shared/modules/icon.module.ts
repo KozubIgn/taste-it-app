@@ -27,7 +27,9 @@ import {
   faCarrot,
   faPenToSquare,
   faTrashCan,
-  faFireBurner
+  faFireBurner,
+  faBowlRice,
+  faBlender
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faSquarePlus,
@@ -66,7 +68,9 @@ export class IconModule {
       faCarrot,
       faPenToSquare,
       faTrashCan,
-      faFireBurner
+      faFireBurner,
+      faBowlRice,
+      faBlender
     );
   }
 }
