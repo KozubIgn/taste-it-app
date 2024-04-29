@@ -29,6 +29,8 @@ export class RecipieListComponent implements OnInit {
     this.router.navigate(['./new'], { relativeTo: this.route });
   }
 
-  onRecipe() {
+  onSelectRecipeItem(recipe: Recipe) {
+    this.recipeService.setRecipeSubject(recipe);
+    this.router.navigate([`./${recipe.id}`], { relativeTo: this.route });
   }
 }
