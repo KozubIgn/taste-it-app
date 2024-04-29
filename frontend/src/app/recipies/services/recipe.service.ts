@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Recipe } from '../interfaces/recipe.interface';
 import { Ingredient } from 'src/app/shared/interfaces/ingredient.interface';
-import { BehaviorSubject, Observable, Subject, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { RECIPES, RECIPE_ADD_NEW, RECIPE_DELETE } from 'src/app/shared/constants/urls';
 import { User } from 'src/app/auth/user.model';
@@ -36,6 +36,10 @@ export class RecipeService {
       }
       )
     )
+  }
+
+  getRecipeById(id: string): Observable<Recipe | undefined> {
+    return this.recipesSubject$.pipe(map(recipes => recipes.find(recipe => recipe.id === id)))
   }
 
   getRecipe(index: number | undefined) {
