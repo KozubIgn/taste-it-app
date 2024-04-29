@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Recipe } from '../interfaces/recipe.interface';
 import { RecipeService } from '../services/recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogComponent } from 'src/app/components/dialogs/delete-dialog.component';
 
@@ -26,10 +26,10 @@ export class RecipeDetailComponent {
   ) { }
 
   ngOnInit() {
-    this.recipe$ = this.recipeService.getRecipeSubject().pipe(map(recipe =>
-      this.recipe = recipe
-    ));
-  }
+    const recipeId = this.route.snapshot.paramMap.get('id');
+    this.recipe$ = this.recipeService.getRecipeById(recipeId!)
+  };
+
   onAddToShoppingList() {
     this.recipeService.addIngredientsToShoppingList(this.recipe?.ingredients);
   }
