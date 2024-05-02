@@ -6,6 +6,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Ingredient } from '../models/ingredient.model';
 import { auth } from '../../middlewares/auth.mid';
 import { UserModel } from '../models/user.model';
+import mongoose from 'mongoose';
 const router = Router();
 
 router.get('/', asyncHandler(async (req, res) => {
@@ -100,6 +101,21 @@ router.delete('/:id/recipes/:recipeId', auth, asyncHandler(async (req: any, res:
     }
 }
 ));
+
+router.put('/:userId/recipes/:recipeId', auth, asyncHandler(async (req: any, res: any) => {
+    const recipeId = new mongoose.Types.ObjectId(req.params.recipeId);
+    const newRecipe: Recipe = req.body.newRecipe;
+    try {
+        const updatedRecipe = await RecipeModel.findOneAndUpdate(
+            { _id: recipeId },
+            newRecipe,
+            { new: true }
+        );
+        res.status(200).send({ message: "Recipe updated successfully", updatedRecipe });
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error" });
+    }
+}));
 
 const tagExists = async (tagId: any): Promise<boolean> => {
     try {
