@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Recipe } from '../interfaces/recipe.interface';
 import { RecipeService } from '../services/recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogComponent } from 'src/app/components/dialogs/delete-dialog.component';
 
@@ -15,7 +15,7 @@ import { DeleteDialogComponent } from 'src/app/components/dialogs/delete-dialog.
 
 export class RecipeDetailComponent {
   recipe: Recipe | undefined;
-  id: number | undefined;
+  id: string | null = null;
   recipe$: Observable<Recipe | undefined> | undefined;
 
   constructor(
@@ -26,8 +26,14 @@ export class RecipeDetailComponent {
   ) { }
 
   ngOnInit() {
-    const recipeId = this.route.snapshot.paramMap.get('id');
-    this.recipe$ = this.recipeService.getRecipeById(recipeId!)
+    this.id = this.route.snapshot.paramMap.get('id');
+    this.recipe$ = this.recipeService.getRecipeById(this.id!).pipe(tap(
+      (recipe: Recipe | undefined) => {
+        if (recipe) {
+          this.recipe = recipe; 
+        }
+      }
+    ))
   };
 
   onAddToShoppingList() {

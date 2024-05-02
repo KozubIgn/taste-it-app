@@ -16,7 +16,7 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeFormComponent implements OnInit {
-  id: number | undefined;
+  id: string | null = null;
   editMode = false;
   recipeForm!: FormGroup;
   uploadedFiles: UploadedFile[] = [];
@@ -35,6 +35,7 @@ export class RecipeFormComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.paramMap.get('id');
     this.recipeService.getRecipeSubject().subscribe(recipe => { this.recipe = recipe; });
     this.tagService.getAllTags().subscribe(Alltags => { this.tags = Alltags; });
     this.editMode = this.isEditRoute();
@@ -81,7 +82,7 @@ export class RecipeFormComponent implements OnInit {
       cookTime: this.recipeForm.value['cookTime'],
       ingredients: this.recipeForm.value['ingredients'],
     }
-    this.editMode ? this.recipeService.updateRecipe(this.id!, newRecipe) : this.recipeService.addRecipe(newRecipe);
+    this.editMode ? this.recipeService.updateRecipe(newRecipe, this.id!) : this.recipeService.addRecipe(newRecipe);
     this.onCancel();
   }
   private initForm() {

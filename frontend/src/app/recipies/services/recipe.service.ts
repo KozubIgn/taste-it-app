@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Recipe } from '../interfaces/recipe.interface';
 import { Ingredient } from 'src/app/shared/interfaces/ingredient.interface';
-import { BehaviorSubject, Observable, Subject, map} from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map, switchMap, take, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { RECIPES, RECIPE_ADD_NEW, RECIPE_DELETE } from 'src/app/shared/constants/urls';
+import { RECIPES, RECIPE_ADD_NEW, RECIPE_DELETE, RECIPE_UPDATE } from 'src/app/shared/constants/urls';
 import { User } from 'src/app/auth/user.model';
 import { AuthService } from '../../auth/auth.service';
 
@@ -72,9 +72,29 @@ export class RecipeService {
     ).subscribe();
   }
 
-  updateRecipe(index: number, newRecipe: Recipe) {
-    this.recipes[index] = newRecipe;
-    this.recipesChanged$.next(this.recipes.slice());
+  updateRecipe(newRecipe: Recipe, recipeId: string) {
+    const user = localStorage.getItem('user');
+    const userObj: User = JSON.parse(user!);
+ 
+    return this.http.put<Recipe>(RECIPE_UPDATE(userObj.id, recipeId), { newRecipe }).pipe(
+      switchMap((response: any) => {
+        const updatedRecipe = response.updatedRecipe;
+        return this.recipesSubject$.pipe(
+          take(1),
+          map((recipes: Recipe[]) => {
+            const updatedRecipes = recipes.map(recipe => {
+              if (recipe.id === updatedRecipe.id) {
+                return updatedRecipe;
+              } else {
+                return recipe;
+              }
+            });
+            return updatedRecipes;
+          }),
+          tap(updatedRecipes => this.recipesSubject$.next(updatedRecipes))
+        );
+      })
+    ).subscribe();
   }
 
   deleteRecipe(id: string) {
