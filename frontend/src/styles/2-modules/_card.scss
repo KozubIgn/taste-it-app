@@ -1,11 +1,5 @@
 @import "../3-helpers/variables";
 
-@mixin truncation {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 html {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -20,6 +14,7 @@ img {
     color: inherit;
     text-decoration: none;
     font-weight: 500;
+    cursor: pointer;
 }
 
 .card-list {
@@ -28,28 +23,20 @@ img {
 }
 
 .ft-recipe {
-    margin: 5px;
-    width: 16rem;
-    height: 25rem;
     background: var(--white);
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 0 88px 0 rgba(0, 0, 0, 0.1607843137254902);
-    border-radius: $border-radius; 
+    box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.109);
+    border-radius: $border-radius;
     transition-property: transform;
     transition-duration: 0.35s;
     transform: translateY(2px);
 
     &:hover {
         transition-property: transform;
-            transition-duration: 0.35s;
-            transform: translateY(-2px);
+        transition-duration: 0.35s;
+        transform: translateY(-2px);
     }
 
     .thumb {
-        position: relative;
-        height: 11rem;
-
         img {
             width: 100%;
             height: 100%;
@@ -60,14 +47,13 @@ img {
     }
 
     .content {
-        padding: 0 1em 1em;
+        padding: 0 1rem 1rem;
 
         .row-wrapper {
             padding: .2em 0 .1em;
             border-bottom: 1px solid #d8d8d8;
 
             .recipe-title {
-                @include truncation();
                 margin-bottom: .2em;
             }
         }
@@ -114,7 +100,6 @@ img {
             a {
                 display: inline-block;
                 background: $color-primary;
-                padding: .45em 1em;
                 width: 100%;
                 text-align: center;
                 border-radius: 5px;
