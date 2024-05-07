@@ -1,7 +1,8 @@
-import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { Recipe } from '../../interfaces/recipe.interface';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RecipeService } from '../../services/recipe.service';
+import { BehaviorSubject } from 'rxjs';
 
 type Url = {
   url: string;
@@ -15,17 +16,27 @@ type Url = {
 })
 
 export class RecipeItemComponent implements OnInit {
-  constructor(private router: Router,
-    private route: ActivatedRoute,
-  private recipeService: RecipeService) { }
   @Input() recipe!: Recipe;
   urlString?: Url | undefined;
   text: string = 'Portion';
   noValue: string = '-';
+  showListItem: boolean = false;
+  screenWidthSubject$: BehaviorSubject<number> = new BehaviorSubject(window.innerWidth);
+
+  constructor(private router: Router,
+    private route: ActivatedRoute,
+    private recipeService: RecipeService) { }
+
+  @HostListener('window:resize', ['$event']) onResize(event: any) {
+    this.screenWidthSubject$.subscribe(width => {
+      this.showListItem = width < 976;
+    })
+  }
 
   ngOnInit(): void {
     this.recipe?.imagePath?.forEach(urlObj => {
       this.urlString = urlObj as unknown as Url;
+      this.getScreenWidth();
     })
   }
 
@@ -33,4 +44,8 @@ export class RecipeItemComponent implements OnInit {
     this.recipeService.setRecipeSubject(recipe);
     this.router.navigate([`./${recipe.id}`], { relativeTo: this.route });
   }
+  getScreenWidth() {
+    window.addEventListener('resize', () => this.screenWidthSubject$.next(window.innerWidth));
+  }
+
 }

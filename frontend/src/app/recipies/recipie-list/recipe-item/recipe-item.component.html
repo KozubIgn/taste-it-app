@@ -8,9 +8,14 @@
         <p class="recipe-title truncate">{{recipe.name}}</p>
       </div>
       <ul class="recipe-details">
-        <li class=" recipe-details-item">
+          <li class="recipe-details-item">
+            <span class="value"> <fa-icon [icon]="['fas', 'clock']"></fa-icon>
+              {{recipe.cookTime ? recipe.cookTime : noValue}} </span>
+            <span class="title">Minutes</span>
+          </li>
+        <li class=" recipe-details-item" *ngIf="showListItem">
           <span class="value">
-            <fa-icon class="text-primaryCol" [icon]="['fas', 'clock']"></fa-icon>
+            <fa-icon class="text-primaryCol" [icon]="['fas', 'blender']"></fa-icon>
             {{recipe.prepTime ? recipe.prepTime : noValue }} </span>
           <span class="title">Minutes</span>
         </li>
