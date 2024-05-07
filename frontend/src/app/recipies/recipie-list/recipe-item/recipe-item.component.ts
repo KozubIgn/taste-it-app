@@ -27,7 +27,7 @@ export class RecipeItemComponent implements OnInit {
     private route: ActivatedRoute,
     private recipeService: RecipeService) { }
 
-  @HostListener('window:resize', ['$event']) onResize(event: any) {
+  @HostListener('window:resize', ['$event']) onResize(event?: any) {
     this.screenWidthSubject$.subscribe(width => {
       this.showListItem = width < 976;
     })
@@ -37,6 +37,7 @@ export class RecipeItemComponent implements OnInit {
     this.recipe?.imagePath?.forEach(urlObj => {
       this.urlString = urlObj as unknown as Url;
       this.getScreenWidth();
+      this.onResize();
     })
   }
 
@@ -44,6 +45,7 @@ export class RecipeItemComponent implements OnInit {
     this.recipeService.setRecipeSubject(recipe);
     this.router.navigate([`./${recipe.id}`], { relativeTo: this.route });
   }
+  
   getScreenWidth() {
     window.addEventListener('resize', () => this.screenWidthSubject$.next(window.innerWidth));
   }
