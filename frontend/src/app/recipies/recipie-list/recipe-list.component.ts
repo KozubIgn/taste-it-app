@@ -6,6 +6,7 @@ import { Recipe } from '../interfaces/recipe.interface';
 import { RecipeService } from '../services/recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ListType } from '../enums/list-type.enum';
 
 @Component({
   selector: 'app-recipe-list',
@@ -14,6 +15,7 @@ import { Observable } from 'rxjs';
 })
 export class RecipieListComponent implements OnInit {
   recipes$: Observable<Recipe[]> | undefined;
+  listType: ListType | undefined;
 
   constructor(
     private recipeService: RecipeService,
@@ -22,7 +24,10 @@ export class RecipieListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.recipes$ = this.recipeService.recipes$;
+    this.route.data.subscribe(data => {
+      this.listType = data['listType'];
+      this.recipes$ = this.recipeService.getRecipesForListType(this.listType);
+    })
   }
 
   onNewRecipe() {
