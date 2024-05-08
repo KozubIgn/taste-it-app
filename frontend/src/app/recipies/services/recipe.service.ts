@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { RECIPES, RECIPE_ADD_NEW, RECIPE_DELETE, RECIPE_UPDATE } from 'src/app/shared/constants/urls';
 import { User } from 'src/app/auth/user.model';
 import { AuthService } from '../../auth/auth.service';
+import { ListType } from '../enums/list-type.enum';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
@@ -35,6 +36,21 @@ export class RecipeService {
         return user ? user.created_recipes : [];
       }
       )
+    )
+  }
+
+  getRecipesForListType(listType: ListType | undefined): Observable<Recipe[]> | undefined {
+    switch (listType) {
+      case ListType.ALL:
+        return this.getRecipes();
+      case ListType.FAVOURITES:
+        return this.getFavouritesRecipes();
+    }
+  }
+
+  getFavouritesRecipes(): Observable<Recipe[]> | undefined {
+    return this.recipes$?.pipe(
+      map(recipes => recipes.filter(recipe => recipe.favourites))
     )
   }
 
