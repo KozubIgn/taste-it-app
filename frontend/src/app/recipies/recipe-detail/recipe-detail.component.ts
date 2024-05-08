@@ -17,6 +17,7 @@ export class RecipeDetailComponent {
   recipe: Recipe | undefined;
   id: string | null = null;
   recipe$: Observable<Recipe | undefined> | undefined;
+   private isFavourite: boolean | undefined;
 
   constructor(
     private recipeService: RecipeService,
@@ -48,6 +49,18 @@ export class RecipeDetailComponent {
   onDeleteRecipe(id: string) {
     this.recipeService.deleteRecipe(id);
     this.router.navigate(['/dashboard/recipes']);
+  }
+
+  toggleRecipeFavourite() {
+    if (!this.recipe$) {
+      return;
+    }
+    this.recipe$.subscribe(recipe => {
+      return this.isFavourite = !recipe?.favourites;
+    });
+    if (this.isFavourite !== undefined) {
+      this.recipeService.changeFavouriteStatus(this.recipe?.id!, this.isFavourite)
+    }
   }
 
   openDeleteModalDialog() {
