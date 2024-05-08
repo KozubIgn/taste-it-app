@@ -32,6 +32,7 @@ import {
   faBlender
 } from '@fortawesome/free-solid-svg-icons';
 import {
+  faHeart as farHeart,
   faSquarePlus,
   faStar as farStar,
   faCircleXmark
@@ -49,6 +50,7 @@ export class IconModule {
       faStar,
       faHouse,
       faHeart,
+      farHeart,
       faSquarePlus,
       faUtensils,
       faArrowLeft,
