@@ -3,7 +3,7 @@ import { Recipe } from '../interfaces/recipe.interface';
 import { Ingredient } from 'src/app/shared/interfaces/ingredient.interface';
 import { BehaviorSubject, Observable, Subject, map, switchMap, take, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { RECIPES, RECIPE_ADD_NEW, RECIPE_DELETE, RECIPE_UPDATE } from 'src/app/shared/constants/urls';
+import { FAVOURITES, RECIPES, RECIPE_ADD_NEW, RECIPE_DELETE, RECIPE_UPDATE } from 'src/app/shared/constants/urls';
 import { User } from 'src/app/auth/user.model';
 import { AuthService } from '../../auth/auth.service';
 import { ListType } from '../enums/list-type.enum';
@@ -108,6 +108,25 @@ export class RecipeService {
             return updatedRecipes;
           }),
           tap(updatedRecipes => this.recipesSubject$.next(updatedRecipes))
+        );
+      })
+    ).subscribe();
+  }
+
+  changeFavouriteStatus(id: string, isfavourite: boolean) {
+    return this.http.patch<Recipe>(FAVOURITES(id), { favourite: isfavourite }).pipe(
+      switchMap((response: any) => {
+        return this.recipesSubject$.pipe(
+          take(1),
+          map((recipes: Recipe[]) => {
+            const uploadedRecipes = recipes.map(recipe => {
+              if (recipe.id === id) {
+                recipe.favourites = response.favourites;
+              } return recipe;
+            });
+            return uploadedRecipes;
+          }),
+          tap(uploadedRecipes => this.recipesSubject$.next(uploadedRecipes))
         );
       })
     ).subscribe();
