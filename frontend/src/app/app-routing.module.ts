@@ -8,6 +8,7 @@ import { HomeStartComponent } from './home-start/home-start.component';
 import { RecipeDetailComponent } from './recipies/recipe-detail/recipe-detail.component';
 import { RecipieListComponent } from './recipies/recipie-list/recipe-list.component';
 import { AuthComponent } from './auth/auth.component';
+import { ListType } from './recipies/enums/list-type.enum';
 
 const appRoutes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -15,7 +16,8 @@ const appRoutes: Routes = [
     path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard],
     children: [
       { path: '', component: HomeStartComponent },
-      { path: 'recipes', component: RecipieListComponent, },
+      { path: 'recipes', component: RecipieListComponent, data: {listType: ListType.ALL} },
+      { path: 'favourites', component: RecipieListComponent, data: { listType: ListType.FAVOURITES} },
       { path: 'recipes/new', component: RecipeFormComponent },
       { path: 'recipes/:id', component: RecipeDetailComponent },
       { path: 'recipes/:id/edit', component: RecipeFormComponent },
