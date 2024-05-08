@@ -117,6 +117,20 @@ router.put('/:userId/recipes/:recipeId', auth, asyncHandler(async (req: any, res
     }
 }));
 
+router.patch('/:recipeId/favourites', auth, asyncHandler(async (req: any, res: any) => {
+    const recipeId = new mongoose.Types.ObjectId(req.params.recipeId);
+    try {
+        const updatedRecipe = await RecipeModel.findOneAndUpdate(
+            { _id: recipeId },
+            { favourites: req.body.favourite },
+            { new: true }
+        );
+        res.status(200).send({ message: "Recipe saved as favourite", favourites: updatedRecipe!.favourites });
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}));
+
 const tagExists = async (tagId: any): Promise<boolean> => {
     try {
         const existingTag = await TagModel.findById(tagId);
