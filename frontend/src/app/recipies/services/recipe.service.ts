@@ -7,6 +7,7 @@ import { FAVOURITES, RECIPES, RECIPE_ADD_NEW, RECIPE_DELETE, RECIPE_UPDATE } fro
 import { User } from 'src/app/auth/user.model';
 import { AuthService } from '../../auth/auth.service';
 import { ListType } from '../enums/list-type.enum';
+import { UploadedFile } from '../../shared/interfaces/upload-file.interface';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
