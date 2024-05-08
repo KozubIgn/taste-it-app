@@ -25,6 +25,9 @@ export class RecipeService {
   getAllRecipes(): Observable<Recipe[]> {
     return this.http.get<Recipe[]>(RECIPES);
   }
+  getRecipesSubject(): Observable<Recipe[]>{
+    return this.recipesSubject$;
+  }
 
   setRecipes(recipes: Recipe[]) {
     this.recipes = recipes;
@@ -43,7 +46,7 @@ export class RecipeService {
   getRecipesForListType(listType: ListType | undefined): Observable<Recipe[]> | undefined {
     switch (listType) {
       case ListType.ALL:
-        return this.getRecipes();
+        return this.getRecipesSubject();
       case ListType.FAVOURITES:
         return this.getFavouritesRecipes();
     }
