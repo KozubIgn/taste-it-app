@@ -18,6 +18,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { AuthService } from './auth/auth.service';
 import { appInitializer } from './helpers/app.initializer';
 import { ErrorInterceptor } from './auth/error.interceptor';
+import { ShoppingListPageComponent } from './shopping-list/shopping-page/shopping-list-page.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ErrorInterceptor } from './auth/error.interceptor';
     HomeStartComponent,
     SidebarComponent,
     DashboardComponent,
+    ShoppingListPageComponent,
   ],
   imports: [
     AuthModule,
