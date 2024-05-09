@@ -3,38 +3,31 @@
     <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
   </div>
 
-  <div class="pg-row flex">
+  <div class="flex flex-wrap flex-row justify-center md:justify-around my-7">
     <a routerLink="./new">
-      <button mat-raised-button color="primary">
-        <fa-icon [icon]="['fas', 'circle-plus']"></fa-icon>
-        Add Recipe
-      </button></a
-    >
+      <button mat-raised-button color="primary" class="w-56 md:w-auto md:max-w-md mb-2 md:mb-0 md:mr-4">
+        <fa-icon class="mr-7" [icon]="['fas', 'circle-plus']"></fa-icon>
+        <span>Add Recipe</span></button>
+      </a>
     <a routerLink="./recipes">
-      <button mat-raised-button color="primary">
-        <fa-icon [icon]="['fas', 'utensils']"></fa-icon>
-        My Recipes
-      </button></a
-    >
-
+      <button mat-raised-button color="primary" class="w-56 md:w-auto md:max-w-md mb-2 md:mb-0 md:mr-4">
+        <fa-icon class="mr-7" [icon]="['fas', 'utensils']"></fa-icon>
+        <span>My Recipes</span></button>
+      </a>
     <a routerLink="./favourites">
-      <button mat-raised-button color="primary">
-        <fa-icon [icon]="['fas', 'heart']"></fa-icon>
-        Favourites
-      </button></a
-    >
+      <button mat-raised-button color="primary" class="w-56 md:w-auto md:max-w-md mb-2 md:mb-0 md:mr-4">
+        <fa-icon class="mr-7" [icon]="['fas', 'heart']"></fa-icon>
+        <span>Favourites</span></button>
+      </a>
     <a routerLink="./shopping-list">
-      <button mat-raised-button color="primary">
-        <fa-icon [icon]="['fas', 'basket-shopping']"></fa-icon>
-        Shopping List
-      </button></a
-    >
-
+      <button mat-raised-button color="primary" class="w-56 md:w-auto md:max-w-md mb-2 md:mb-0 md:mr-4">
+        <fa-icon class="mr-7" [icon]="['fas', 'basket-shopping']"></fa-icon>
+        <span>Shopping List</span></button>
+      </a>
     <a routerLink="./tags">
-      <button mat-raised-button color="primary">
-        <fa-icon [icon]="['fas', 'tags']"></fa-icon>
-        Tags
-      </button></a
-    >
+      <button mat-raised-button color="primary" class="w-56 md:w-auto md:max-w-md mb-2 md:mb-0 md:mr-4">
+        <fa-icon class="mr-7" [icon]="['fas', 'tags']"></fa-icon>
+        <span>Tags</span></button>
+    </a>
   </div>
 </div>
