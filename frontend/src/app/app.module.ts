@@ -19,6 +19,7 @@ import { AuthService } from './auth/auth.service';
 import { appInitializer } from './helpers/app.initializer';
 import { ErrorInterceptor } from './auth/error.interceptor';
 import { ShoppingListPageComponent } from './shopping-list/shopping-page/shopping-list-page.component';
+import { ShoppingListItemComponent } from './shopping-list/shopping-list-item/shopping-list-item.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { ShoppingListPageComponent } from './shopping-list/shopping-page/shoppin
     SidebarComponent,
     DashboardComponent,
     ShoppingListPageComponent,
+    ShoppingListItemComponent
   ],
   imports: [
     AuthModule,
