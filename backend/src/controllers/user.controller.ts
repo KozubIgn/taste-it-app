@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { RefreshToken, RefreshTokenModel } from '../models/refreshToken.model';
 import { Types } from "mongoose";
 import { Recipe } from "../models/recipe.model";
+import { ShoppingList } from "../models/shopping-list.model";
 
 export const signup = async (req: any, res: any) => {
     const email = req.body.email;
@@ -17,11 +18,12 @@ export const signup = async (req: any, res: any) => {
         email: email.toLowerCase(),
         password: hashedPassword,
         favourite_recipes: [],
-        created_recipes: []
+        created_recipes: [],
+        shopping_lists: [],
     };
     await UserModel.create(newUser).then(async (user) => {
-         await generateRefreshTokenModel(user).then(async (tokenModel) => {
-           await setTokenCookie(res, tokenModel.token);
+        await generateRefreshTokenModel(user).then(async (tokenModel) => {
+            await setTokenCookie(res, tokenModel.token);
             res.status(200).send({
                 user: getUserDetails(user),
                 jwtToken: generateJwtTokenForUser(user.id),
@@ -33,7 +35,12 @@ export const signup = async (req: any, res: any) => {
 
 export const login = async (req: any, res: any) => {
     const { email, password } = req.body;
-    const user = await UserModel.findOne({ email }).populate<{ created_recipes: Recipe[] }>({ path: 'created_recipes', model: 'recipe' });
+    const user = await UserModel.findOne({ email })
+        .populate<{ created_recipes: Recipe[] }>({ path: 'created_recipes', model: 'recipe' })
+        .populate<{ shopping_lists: ShoppingList[] }>({
+            path: 'shopping_lists',
+            populate: { path: 'ingredients', model: 'ingredient' }
+        })
     if (user && (await compare(password, user.password))) {
         const jwtToken = generateJwtTokenForUser(user.id);
         const refreshTokenModel = await generateRefreshTokenModel(user);
@@ -107,7 +114,12 @@ const generateRefreshTokenModel = async (user: User) => {
 const getUserFromRefreshToken = async (token: string) => {
     const user = await RefreshTokenModel.findOne({ token: token }).populate<{ user: User }>({
         path: 'user',
-        populate: { path: 'created_recipes', model: 'recipe' }
+        populate: [{ path: 'created_recipes', model: 'recipe' },
+        {
+            path: 'shopping_lists', populate: {
+                path: 'ingredients', model: 'ingredient'
+            }
+        }]
     }).orFail();
     if (!user || user.isExpired) throw new Error('Invalid token');
     return user.user;
@@ -134,6 +146,6 @@ const generateJwtTokenForUser = (userId: string) => {
 }
 
 const getUserDetails = (user: User) => {
-    const { id, email, favourite_recipes, created_recipes, custom_objects, settings } = user;
-    return { id, email, favourite_recipes, created_recipes, custom_objects, settings };
+    const { id, email, favourite_recipes, created_recipes, custom_objects, shopping_lists, settings } = user;
+    return { id, email, favourite_recipes, created_recipes, custom_objects, shopping_lists, settings };
 }
