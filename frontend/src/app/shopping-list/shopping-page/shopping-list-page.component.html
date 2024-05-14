@@ -9,9 +9,9 @@
         </div>
         <div class="flex flex-col w-full lg:flex-row lg:flex-wrap lg:justify-start">
             <ng-container *ngIf="shoppingLists$ | async as shoppingLists">
-              
+                <app-shopping-list [shoppingLists]="shoppingLists"></app-shopping-list>
             </ng-container>
-            <app-shopping-list></app-shopping-list>
+          
         </div>
     </div>
 </div>
