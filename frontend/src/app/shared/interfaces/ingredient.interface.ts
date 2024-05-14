@@ -1,7 +1,6 @@
-import { ThemePalette } from "@angular/material/core";
+import { ShoppingList } from "src/app/shopping-list/interfaces/shopping-list.interface";
 
-export interface Ingredient {
-  name: string;
+export interface Ingredient extends ShoppingList {
   amount: number;
   completed?: boolean;
   color?: ThemePalette
