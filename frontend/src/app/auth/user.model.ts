@@ -6,6 +6,7 @@ export class User {
     public favourite_recipes?: any,
     public created_recipes?: any,
     public custom_objects?: any,
+    public shopping_lists?:any,
     public settings?: any,
     public createdAt?: Date,
     public updatedAt?: Date
