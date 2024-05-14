@@ -2,6 +2,4 @@ import { ShoppingList } from "src/app/shopping-list/interfaces/shopping-list.int
 
 export interface Ingredient extends ShoppingList {
   amount: number;
-  completed?: boolean;
-  color?: ThemePalette
 }
