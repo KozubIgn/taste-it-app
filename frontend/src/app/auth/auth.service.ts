@@ -102,7 +102,7 @@ export class AuthService {
   }
 
   private handleAuthentication(user: User, jwtToken: string, refreshToken: string) {
-    const generatedUser = new User(user.id, user.email, jwtToken, user.favourite_recipes, user.created_recipes, user.custom_objects, user.settings, user.createdAt, user.updatedAt);
+    const generatedUser = new User(user.id, user.email, jwtToken, user.favourite_recipes, user.created_recipes, user.custom_objects, user.shopping_lists, user.settings, user.createdAt, user.updatedAt);
     this.userSub$.next(generatedUser);
     this.localStorageService.setToken(jwtToken);
     this.localStorageService.setRefreshToken(refreshToken);

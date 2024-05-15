@@ -9,6 +9,7 @@ import { RecipeDetailComponent } from './recipies/recipe-detail/recipe-detail.co
 import { RecipieListComponent } from './recipies/recipie-list/recipe-list.component';
 import { AuthComponent } from './auth/auth.component';
 import { ListType } from './recipies/enums/list-type.enum';
+import { ShoppingListPageComponent } from './shopping-list/shopping-page/shopping-list-page.component';
 
 const appRoutes: Routes = [
   { path: 'auth', component: AuthComponent },
@@ -22,7 +23,7 @@ const appRoutes: Routes = [
       { path: 'recipes/:id', component: RecipeDetailComponent },
       { path: 'recipes/:id/edit', component: RecipeFormComponent },
       { path: 'new', component: RecipeFormComponent },
-      { path: 'shopping-list', component: ShoppingListComponent },
+      { path: 'shopping-list', component: ShoppingListPageComponent },
     ],
   },
   { path: 'shopping-list', component: ShoppingListComponent },

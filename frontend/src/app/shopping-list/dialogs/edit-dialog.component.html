@@ -1,0 +1,55 @@
+<h2 mat-dialog-title> <ng-container *ngIf="data.title; else updateTitle">
+        {{data.title}}
+    </ng-container>
+    <ng-template #updateTitle>Update new shopping list</ng-template>
+</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="shoppingListForm">
+
+        <div class="py-2 px-1.5">
+            <label class="pl-2 py-0.5" for="name">Name</label>
+            <div class="ml-3">
+                <input type="text" id="name" formControlName="name" class="form-control"
+                    placeholder="Shopping list for today's dinner" />
+                <p *ngIf="!shoppingListForm.get('name')?.valid && shoppingListForm.get('name')?.touched"
+                    class="error-message">
+                    Shopping list must have a name.</p>
+            </div>
+        </div>
+
+        <label class="pl-2 py-0.5" for="cookTime">Ingredients</label>
+        <div formArrayName="ingredients">
+            <ng-container *ngFor="let ingredientControl of controls; let i = index">
+                <div class="ml-3 shrink flex items-center" [formGroupName]="i">
+                    <div>
+                        <input type="text" class="form-control" formControlName="name" />
+                    </div>
+                    <div class="ml-3 w-14">
+                        <input type="number" class="form-control" formControlName="amount" min="0" />
+                    </div>
+                    <div>
+                        <button mat-icon-button color="warn" type="button" (click)="onDeleteIngredient(i)">
+                            <fa-icon class="flex items-center" [icon]="['fas', 'xmark']"></fa-icon></button>
+                    </div>
+                </div>
+                <p *ngIf="isInvalid(ingredientControl.get('name')) || isInvalid(ingredientControl.get('amount'))"
+                    class="error-message ml-3">
+                    Ingredient name and amount required.</p>
+            </ng-container>
+            <div class="py-2 px-1.5">
+                <button mat-raised-button color="basic" type="button" (click)="onAddIngredient()">
+                    Add Ingredient
+                </button>
+            </div>
+        </div>
+
+        <mat-dialog-actions [align]='"end"'>
+            <button mat-button (click)="onCancel()">Cancel</button>
+            <button mat-button [mat-dialog-close]="shoppingListForm" [disabled]="!shoppingListForm.valid"
+                cdkFocusInitial>
+                <ng-container *ngIf="data.title; else updateButton">Create</ng-container>
+                <ng-template #updateButton>Update</ng-template></button>
+        </mat-dialog-actions>
+    </form>
+</mat-dialog-content>
