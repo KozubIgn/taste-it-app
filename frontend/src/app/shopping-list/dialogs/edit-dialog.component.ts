@@ -56,7 +56,7 @@ export class EditDialogComponent implements OnInit {
     private initForm(data?: any) {
         let name: string | undefined = '';
         let ingredients = new FormArray<FormGroup>([]);
-        if (data) {
+        if ('node' in data) {
             const shoppingList = data.node;
             name = shoppingList.name;
             if (data.descendants && data.descendants.length > 0) {

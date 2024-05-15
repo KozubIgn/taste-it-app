@@ -25,7 +25,10 @@ export class ShoppingListPageComponent implements OnInit {
   }
 
   onNewShoppingList() {
-    const dialogRef = this.dialog.open(EditDialogComponent, {});
+    const dialogRef = this.dialog.open(EditDialogComponent, {
+      data:
+        { title: 'Add new shopping list' }
+    });
     dialogRef.afterClosed().subscribe(form => {
       if (form) {
         console.log(form);
