@@ -36,15 +36,6 @@ export class EditDialogComponent implements OnInit {
         return (<FormArray>this.shoppingListForm.get('ingredients')).controls;
     }
 
-    onSubmit() {
-        const newShoppingList: ShoppingList = {
-            name: this.shoppingListForm.get('name')?.value,
-            ingredients: this.shoppingListForm.get('ingredients')?.value
-        }
-        // this.editMode ? this.ShoppingListService.updateShoppingList(newShoppingList) :
-        //     this.ShoppingListService.addNewShoppingList(newShoppingList);
-    }
-
     isEditRoute(): boolean {
         return this.router.url.includes('edit');
     }
