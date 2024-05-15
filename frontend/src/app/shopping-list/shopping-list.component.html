@@ -1,7 +1,8 @@
 <ng-container *ngIf="dataSource.data.length> 0; else noData">
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <!-- This is the tree node template for leaf nodes -->
-    <mat-tree-node [ngClass]=" node.level === 1 ? 'bg-lightFontDisabled' : '' " *matTreeNodeDef="let node" matTreeNodePadding>
+    <mat-tree-node [ngClass]=" node.level === 1 ? 'bg-lightFontDisabled' : '' " *matTreeNodeDef="let node"
+      matTreeNodePadding>
       <!-- use a disabled button to provide padding for tree leaf -->
       <button mat-icon-button disabled></button>
       <mat-checkbox color="font-color-disabled" [checked]="checklistSelection.isSelected(node)"

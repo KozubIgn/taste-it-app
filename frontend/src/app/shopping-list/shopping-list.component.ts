@@ -59,20 +59,12 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.shoppingListService.getShoppingListsSubject().subscribe((shoppingLists: ShoppingList[]) => {
       (shoppingLists && shoppingLists.length > 0) ? this.shoppingLists.push(...shoppingLists) : this.shoppingLists = [];
     });
-    // this.dataSource.data = [];
-    this.dataSource.data = this.shoppingLists;
+     this.dataSource.data = this.shoppingLists;
   }
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
   ngOnInit() {
-    // this.ingredients = this.shoppingListService.getIngredients();
-    // this.ingredientChangeSub =
-    //   this.shoppingListService.ingredients$.subscribe(
-    //     (ingredients: Ingredient[]) => {
-    //       this.ingredients = ingredients;
-    //     }
-    //   );
   }
 
   descendantsAllSelected(node: any): boolean {
@@ -116,17 +108,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         }
       });
     }
-
-
   }
 
   onEditShoppingList(result: any) {
     throw new Error("Method not implemented.");
   }
-
-  // onEditItem(index: number) {
-  //   this.shoppingListService.startedEditing.next(index);
-  // }
 
   ngOnDestroy(): void {
     this.ingredientChangeSub?.unsubscribe();
