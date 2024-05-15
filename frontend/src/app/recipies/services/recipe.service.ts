@@ -29,11 +29,6 @@ export class RecipeService {
     return this.recipesSubject$;
   }
 
-  setRecipes(recipes: Recipe[]) {
-    this.recipes = recipes;
-    this.recipesChanged$.next(this.recipes.slice());
-  }
-
   getRecipes(): Observable<Recipe[]> | undefined {
     return this.authService.getUser$().pipe(
       map((user: User | null) => {
@@ -60,10 +55,6 @@ export class RecipeService {
 
   getRecipeById(id: string): Observable<Recipe | undefined> {
     return this.recipesSubject$.pipe(map(recipes => recipes.find(recipe => recipe.id === id)))
-  }
-
-  getRecipe(index: number | undefined) {
-    return this.recipes[index!];
   }
 
   setRecipeSubject(recipe: Recipe): void {
@@ -95,7 +86,7 @@ export class RecipeService {
   updateRecipe(newRecipe: Recipe, recipeId: string) {
     const user = localStorage.getItem('user');
     const userObj: User = JSON.parse(user!);
- 
+
     return this.http.put<Recipe>(RECIPE_UPDATE(userObj.id, recipeId), { newRecipe }).pipe(
       switchMap((response: any) => {
         const updatedRecipe = response.updatedRecipe;
