@@ -12,22 +12,21 @@ router.post('/:userId/new', auth, asyncHandler(async (req: any, res: any) => {
     const newShoppingListdata: ShoppingList = req.body;
 
     try {
-        const ingredientIds: mongoose.Types.ObjectId[] = [];
+        const ingredients: Ingredient[] = [];
         newShoppingListdata.ingredients?.map(async (ingredient: Ingredient) => {
             const newIngredient = new IngredientModel({
                 name: ingredient.name,
                 amount: ingredient.amount
             })
-            await newIngredient.save();
-            ingredientIds.push(newIngredient._id);
-        })
+            ingredients.push(newIngredient);
+        });
         const userDoc = await UserModel.findOne({ _id: userId });
         if (!userDoc) {
             return res.status(404).send('User not found');
         }
         const newDataWithReference = new ShoppingListModel({
             ...newShoppingListdata,
-            ingredients: ingredientIds
+            ingredients: ingredients
         })
         await newDataWithReference.save();
         userDoc.shopping_lists.push(newDataWithReference);
@@ -51,7 +50,7 @@ router.put('/:userId/shopping-list/:shoppingListId', auth, asyncHandler(async (r
         );
         res.status(200).send({ message: "Shopping list updated successfully", shoppingList: updatedShoppingList });
     } catch (error) {
-        res.status(500).send({ message: "Internal Server Error", error});
+        res.status(500).send({ message: "Internal Server Error", error });
     }
 }));
 
