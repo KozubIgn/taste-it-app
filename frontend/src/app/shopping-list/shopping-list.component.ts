@@ -8,6 +8,7 @@ import { SelectionModel } from "@angular/cdk/collections";
 import { MatDialog } from "@angular/material/dialog";
 import { EditDialogComponent } from "./dialogs/edit-dialog.component";
 import { Ingredient } from "../shared/interfaces/ingredient.interface";
+import { DeleteDialogComponent } from "./dialogs/delete-dialog.component";
 
 interface FlatNode {
   expandable: boolean;
@@ -112,6 +113,18 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  openDeleteModalDialog( node: any) {
+    const dialogRef = this.dialog.open(DeleteDialogComponent, { data: node });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.onDeleteShoppingList(result);
+      }
+    });
+  }
+  onDeleteShoppingList(id: string) {
+    this.shoppingListService.deleteRecipe(id);
   }
 
   onEditShoppingList(result: any) {

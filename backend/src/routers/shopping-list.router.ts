@@ -54,4 +54,16 @@ router.put('/:userId/shopping-list/:shoppingListId', auth, asyncHandler(async (r
     }
 }));
 
+router.delete('/:userId/shopping-list/:shoppingListId', auth, asyncHandler(async (req: any, res: any) => {
+    try {
+        const user = await UserModel.findByIdAndUpdate(req.params.userId,
+            { $pull: { shopping_lists: req.params.shoppingListId } },
+            { new: true })
+            .populate<{ shopping_lists: ShoppingList[] }>({ path: 'shopping_lists', model: 'shoppingList' });
+        res.status(200).send({ message: 'The shopping list has been removed from the list!', user: user });
+    } catch (error) {
+        return res.status(500).send(error)
+    }
+}));
+
 export default router;

@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, map, switchMap, take, tap } from 'rxjs';
 import { ShoppingList } from '../interfaces/shopping-list.interface';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/auth/auth.service';
-import { SHOPPING_LIST_ADD_NEW, SHOPPING_LIST_UPDATE } from 'src/app/shared/constants/urls';
+import { SHOPPING_LIST_ADD_NEW, SHOPPING_LIST_DELETE, SHOPPING_LIST_UPDATE } from 'src/app/shared/constants/urls';
 
 @Injectable({
   providedIn: 'root'
@@ -67,4 +67,13 @@ export class ShoppingListService {
     ).subscribe();
   }
 
+  deleteRecipe(id: string) {
+    const user = localStorage.getItem('user');
+    const userObj: User = JSON.parse(user!);
+    this.http.delete(SHOPPING_LIST_DELETE(userObj.id, id)).pipe(
+      map((response: any) => {
+        this.shoppingListSubject$.next(response.user.shopping_lists);
+      })
+    ).subscribe();
+  }
 }
