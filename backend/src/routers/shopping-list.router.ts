@@ -33,7 +33,7 @@ router.post('/:userId/new', auth, asyncHandler(async (req: any, res: any) => {
         userDoc.shopping_lists.push(newDataWithReference);
         await userDoc.save();
         await newDataWithReference.populate<{ ingredients: mongoose.Types.ObjectId[] }>({ path: 'ingredients', model: 'ingredient' })
-        console.log('RESPONSE', res);
+ 
         res.status(201).send({ message: "Shopping list created successfully!", shoppingList: newDataWithReference });
     } catch (error) {
         res.status(500).send(error);
