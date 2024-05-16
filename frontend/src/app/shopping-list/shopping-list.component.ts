@@ -101,7 +101,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.onEditShoppingList(result);
+          const data = {
+            value: { ...result.value },
+            node: node,
+          }
+          this.onEditShoppingList(data);
         }
       });
     }
