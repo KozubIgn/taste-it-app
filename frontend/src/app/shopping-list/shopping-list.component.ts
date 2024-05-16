@@ -37,6 +37,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       name: node.name,
       amount: node.ingredients?.length,
       level: level,
+      id: node.id
     };
   };
 
