@@ -14,6 +14,7 @@ interface FlatNode {
   name: string;
   level: number;
   amount: number | undefined;
+  id?: string;
 }
 @Component({
   selector: 'app-shopping-list',
@@ -30,6 +31,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         name: node.name,
         level: level,
         amount: node.amount,
+        id: node.id
       };
     }
     return {
