@@ -108,7 +108,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   onEditShoppingList(result: any) {
-    throw new Error("Method not implemented.");
+    if (result.value) {
+      this.shoppingListService.updateShoppingList(result);
+    }
   }
 
   ngOnDestroy(): void {
