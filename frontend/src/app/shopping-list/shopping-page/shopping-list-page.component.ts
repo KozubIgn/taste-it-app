@@ -13,11 +13,10 @@ import { ShoppingListService } from '../services/shopping-list.service';
 })
 export class ShoppingListPageComponent implements OnInit {
   shoppingLists$: Observable<ShoppingList[]> | undefined;
-
   constructor(private shoppingListService: ShoppingListService, private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.shoppingLists$ = this.shoppingListService.getShoppingListsSubject()
+    this.shoppingLists$ = this.shoppingListService.getShoppingListsSubject();
   }
 
   onSelectShoppingList(_t16: any) {
@@ -31,7 +30,6 @@ export class ShoppingListPageComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(form => {
       if (form) {
-        console.log(form);
         this.onAddNewShoppingList(form);
       }
     });

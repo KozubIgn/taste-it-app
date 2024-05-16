@@ -19,8 +19,6 @@ export class ShoppingListService {
   getShoppingLists(): Observable<ShoppingList[]> {
     return this.authService.getUser$().pipe(
       map((user: User | null) => {
-        console.log(user);
-
         return (user && user.shopping_lists !== undefined) ? user.shopping_lists : [];
       })
     )
