@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { User } from 'src/app/auth/user.model';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, map, switchMap, take, tap } from 'rxjs';
 import { ShoppingList } from '../interfaces/shopping-list.interface';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/auth/auth.service';
-import { SHOPPING_LIST_ADD_NEW } from 'src/app/shared/constants/urls';
+import { SHOPPING_LIST_ADD_NEW, SHOPPING_LIST_UPDATE } from 'src/app/shared/constants/urls';
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +19,6 @@ export class ShoppingListService {
   getShoppingLists(): Observable<ShoppingList[]> {
     return this.authService.getUser$().pipe(
       map((user: User | null) => {
-        console.log(user);
-
         return (user && user.shopping_lists !== undefined) ? user.shopping_lists : [];
       })
     )
@@ -43,6 +41,30 @@ export class ShoppingListService {
     ).subscribe();
   }
 
-  updateShoppingList(shoppingList: ShoppingList) { }
+  updateShoppingList(shoppingList: any) {
+    const user = localStorage.getItem('user');
+    const userObj: User = JSON.parse(user!);
+    this.http.put<ShoppingList>(SHOPPING_LIST_UPDATE(userObj.id, shoppingList!.node?.id), shoppingList).pipe(
+      switchMap((response: any) => {
+        const updatedShoppingList = response.shoppingList;
+        return this.shoppingListSubject$.pipe(
+          take(1),
+          map((shoppingLists: ShoppingList[]) => {
+            const updatedShoppingLists: ShoppingList[] = shoppingLists.map(list => {
+              if (list.id === updatedShoppingList.id) {
+                return updatedShoppingList;
+              } else {
+                return list;
+              }
+            });
+            return updatedShoppingLists;
+          }),
+          tap(updatedShoppingLists => {
+            this.shoppingListSubject$.next(updatedShoppingLists)
+          })
+        );
+      })
+    ).subscribe();
+  }
 
 }

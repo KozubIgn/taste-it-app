@@ -1,5 +1,5 @@
 import { Schema, Types, model } from "mongoose";
-import { Ingredient } from "./ingredient.model";
+import { Ingredient, IngredientSchema } from "./ingredient.model";
 
 export interface ShoppingList {
     id: string | Types.ObjectId;
@@ -10,7 +10,7 @@ export interface ShoppingList {
 
 export const ShoppingListSchema = new Schema<ShoppingList>({
     name: { type: String, required: true },
-    ingredients: [{ type: Schema.ObjectId, ref: 'ingredient' }],
+    ingredients: { type: [IngredientSchema] },
     completed: { type: Boolean, default: false }
 }, {
     toJSON: {

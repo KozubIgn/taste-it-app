@@ -14,6 +14,7 @@ interface FlatNode {
   name: string;
   level: number;
   amount: number | undefined;
+  id?: string;
 }
 @Component({
   selector: 'app-shopping-list',
@@ -21,16 +22,16 @@ interface FlatNode {
   styleUrls: ['./shopping-list.component.scss'],
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  shoppingLists$: Observable<ShoppingList[]> | undefined;
-  @Input() shoppingLists: ShoppingList[] = [];
-  private ingredientChangeSub: Subscription | undefined;
-  private _transformer = (node: ShoppingList | Ingredient, level: number) => {
+  @Input() shoppingLists$: Observable<ShoppingList[]> | undefined;
+  private shoppingListsChangeSub: Subscription | undefined;
+  private _transformer = (node: ShoppingList | Ingredient, level: number): FlatNode => {
     if ('amount' in node) {
       return {
         expandable: false,
         name: node.name,
         level: level,
         amount: node.amount,
+        id: node.id
       };
     }
     return {
@@ -38,6 +39,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       name: node.name,
       amount: node.ingredients?.length,
       level: level,
+      id: node.id
     };
   };
 
@@ -55,16 +57,14 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   checklistSelection = new SelectionModel(true);
 
-  constructor(private shoppingListService: ShoppingListService, private dialog: MatDialog) {
-    this.shoppingListService.getShoppingListsSubject().subscribe((shoppingLists: ShoppingList[]) => {
-      (shoppingLists && shoppingLists.length > 0) ? this.shoppingLists.push(...shoppingLists) : this.shoppingLists = [];
-    });
-     this.dataSource.data = this.shoppingLists;
-  }
+  constructor(private shoppingListService: ShoppingListService, private dialog: MatDialog) { }
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
   ngOnInit() {
+    this.shoppingListsChangeSub = this.shoppingLists$?.subscribe((lists: ShoppingList[]) => {
+      this.dataSource.data = lists;
+    })
   }
 
   descendantsAllSelected(node: any): boolean {
@@ -104,17 +104,23 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       });
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.onEditShoppingList(result);
+          const data = {
+            value: { ...result.value },
+            node: node,
+          }
+          this.onEditShoppingList(data);
         }
       });
     }
   }
 
   onEditShoppingList(result: any) {
-    throw new Error("Method not implemented.");
+    if (result.value) {
+      this.shoppingListService.updateShoppingList(result);
+    }
   }
 
   ngOnDestroy(): void {
-    this.ingredientChangeSub?.unsubscribe();
+    this.shoppingListsChangeSub?.unsubscribe();
   }
 }

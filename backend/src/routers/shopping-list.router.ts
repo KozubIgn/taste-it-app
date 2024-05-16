@@ -33,10 +33,26 @@ router.post('/:userId/new', auth, asyncHandler(async (req: any, res: any) => {
         userDoc.shopping_lists.push(newDataWithReference);
         await userDoc.save();
         await newDataWithReference.populate<{ ingredients: mongoose.Types.ObjectId[] }>({ path: 'ingredients', model: 'ingredient' })
-        console.log('RESPONSE', res);
+ 
         res.status(201).send({ message: "Shopping list created successfully!", shoppingList: newDataWithReference });
     } catch (error) {
         res.status(500).send(error);
     }
 }))
+
+router.put('/:userId/shopping-list/:shoppingListId', auth, asyncHandler(async (req: any, res: any) => {
+    const shoppingListId = new mongoose.Types.ObjectId(req.params.shoppingListId);
+    const shoppingListData: ShoppingList = req.body.value;
+    try {
+        const updatedShoppingList = await ShoppingListModel.findByIdAndUpdate(
+            { _id: shoppingListId },
+            shoppingListData,
+            { new: true }
+        );
+        res.status(200).send({ message: "Shopping list updated successfully", shoppingList: updatedShoppingList });
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error", error});
+    }
+}));
+
 export default router;

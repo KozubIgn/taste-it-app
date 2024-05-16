@@ -17,3 +17,4 @@ export const REVOKE_TOKEN = AUTH + 'revoke-token';
 
 export const SHOPPING_LIST = BASE_URL + '/api/shopping-lists';
 export const SHOPPING_LIST_ADD_NEW = (userId: string) => `${SHOPPING_LIST}/${userId}/new`;
+export const SHOPPING_LIST_UPDATE = (userId: string, shoppingListId: string) => `${SHOPPING_LIST}/${userId}/shopping-list/${shoppingListId}`;
