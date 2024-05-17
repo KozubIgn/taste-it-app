@@ -45,8 +45,8 @@
         </div>
 
         <mat-dialog-actions [align]='"end"'>
-            <button mat-button (click)="onCancel()">Cancel</button>
-            <button mat-button [mat-dialog-close]="shoppingListForm" [disabled]="!shoppingListForm.valid"
+            <button mat-raised-button color="basic" (click)="onCancel()">Cancel</button>
+            <button mat-raised-button color="primary" [mat-dialog-close]="shoppingListForm" [disabled]="!shoppingListForm.valid"
                 cdkFocusInitial>
                 <ng-container *ngIf="data.title; else updateButton">Create</ng-container>
                 <ng-template #updateButton>Update</ng-template></button>
