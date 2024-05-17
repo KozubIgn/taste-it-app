@@ -11,7 +11,7 @@
             <label class="pl-2 py-0.5" for="name">Name</label>
             <div class="ml-3">
                 <input type="text" id="name" formControlName="name" class="form-control"
-                    placeholder="Shopping list for today's dinner" />
+                    [placeholder]="!shoppingListForm.get('name')?.touched ? 'ex. list for the dinner' : '' " />
                 <p *ngIf="!shoppingListForm.get('name')?.valid && shoppingListForm.get('name')?.touched"
                     class="error-message">
                     List must have a name.</p>
