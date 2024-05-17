@@ -8,7 +8,7 @@ import { Recipe } from "src/app/recipies/interfaces/recipe.interface";
     template: `
         <mat-dialog-content>
         	<h3>Delete Recipe</h3>
-        	<p>are you sure you want to delete the recipe?</p>
+        	<p>Are you sure you want to delete the recipe?</p>
         </mat-dialog-content>
         <mat-dialog-actions align="end">
         	<button mat-raised-button color="basic" mat-dialog-close>Cancel</button>

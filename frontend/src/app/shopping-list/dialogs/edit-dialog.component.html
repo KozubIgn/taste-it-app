@@ -1,7 +1,7 @@
 <h2 mat-dialog-title> <ng-container *ngIf="data.title; else updateTitle">
         {{data.title}}
     </ng-container>
-    <ng-template #updateTitle>Update new shopping list</ng-template>
+    <ng-template #updateTitle>Update shopping list</ng-template>
 </h2>
 
 <mat-dialog-content>
@@ -14,7 +14,7 @@
                     placeholder="Shopping list for today's dinner" />
                 <p *ngIf="!shoppingListForm.get('name')?.valid && shoppingListForm.get('name')?.touched"
                     class="error-message">
-                    Shopping list must have a name.</p>
+                    List must have a name.</p>
             </div>
         </div>
 

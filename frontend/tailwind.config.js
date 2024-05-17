@@ -22,6 +22,7 @@ module.exports = {
         fontSecondary: '#fcfcfc',
         fontLabel: '#E8E8E8',
         fontDisabled: '#7F7F7F',
+        lightFontDisabled: '#F5F5F5'
       }
     },
   },
