@@ -13,6 +13,19 @@ import { ShoppingListService } from '../services/shopping-list.service';
     selector: 'edit-dialog',
     templateUrl: './edit-dialog.component.html',
     standalone: true,
+    styles: [
+        `input.ng-invalid.ng-touched,
+        textarea.ng-invalid.ng-touched {
+            border: 1px solid rgb(255, 55, 0);
+        }`,
+          `.row {
+            margin: 5px 0;
+        }`,
+        `.error-message {
+            font-size: small;
+            color: rgb(255, 55, 0);
+        }` 
+],
     imports: [MatButtonModule, MatDialogModule, NgFor, NgIf, IconModule, FormsModule, ReactiveFormsModule]
 })
 export class EditDialogComponent implements OnInit {
