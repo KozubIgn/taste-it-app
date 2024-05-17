@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogConfig, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { NgFor, NgIf } from '@angular/common';
 import { ShoppingList } from '../interfaces/shopping-list.interface';
@@ -37,8 +37,12 @@ export class EditDialogComponent implements OnInit {
     constructor(private router: Router,
         private ShoppingListService: ShoppingListService,
         public dialogRef: MatDialogRef<EditDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: any,) { }
-
+        @Inject(MAT_DIALOG_DATA) public data: any,) { 
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.width = '387px'
+        
+        this.dialogRef.updateSize(dialogConfig.width);
+    }
 
     ngOnInit(): void {
         this.editMode = this.isEditRoute();
