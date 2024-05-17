@@ -82,7 +82,7 @@ export class EditDialogComponent implements OnInit {
             }
         }
         this.shoppingListForm = new FormGroup({
-            name: new FormControl(name, [Validators.required, Validators.minLength(3)]),
+            name: new FormControl(name, [Validators.required]),
             ingredients: ingredients,
         });
     }
