@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { IconModule } from 'src/app/shared/modules/icon.module';
 import { ShoppingListService } from '../services/shopping-list.service';
+import { DialogConfig } from '@angular/cdk/dialog';
 
 @Component({
     selector: 'edit-dialog',
