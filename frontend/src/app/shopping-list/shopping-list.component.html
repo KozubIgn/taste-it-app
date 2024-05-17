@@ -11,9 +11,14 @@
         <ng-container *ngIf="node.level === 0 ; else levelOne">({{node.amount}})</ng-container>
         <ng-template #levelOne>: {{node.amount}}</ng-template>
       </mat-checkbox>
-      <button *ngIf="node.level === 0" class="ml-auto pr-3" style="cursor: pointer" (click)="openEditModalDialog(node)">
-        <fa-icon size="sm" title="Edit" [icon]="['fas', 'pen-to-square']"></fa-icon>
-      </button>
+      <div *ngIf="node.level === 0" class="ml-auto pr-3 flex space-x-2">
+        <button style="cursor: pointer" (click)="openEditModalDialog(node)">
+          <fa-icon size="sm" title="Edit" [icon]="['fas', 'pen-to-square']"></fa-icon>
+        </button>
+        <button style="cursor: pointer" (click)="openDeleteModalDialog(node)">
+          <fa-icon size="sm" title="Delete" [icon]="['fas', 'trash-can']"></fa-icon>
+        </button>
+      </div>
     </mat-tree-node>
     <!-- This is the tree node template for expandable nodes -->
     <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
@@ -26,9 +31,15 @@
         (change)="todoItemSelectionToggle(node)">
         {{node.name}} ({{node.amount}})
       </mat-checkbox>
-      <button *ngIf="node.level === 0" class="ml-auto pr-3" style="cursor: pointer" (click)="openEditModalDialog(node)">
-        <fa-icon size="sm" title="Edit" [icon]="['fas', 'pen-to-square']"></fa-icon>
-      </button>
+      <div *ngIf="node.level === 0" class="ml-auto pr-3 flex space-x-2">
+        <button style="cursor: pointer" (click)="openEditModalDialog(node)">
+          <fa-icon size="sm" title="Edit" [icon]="['fas', 'pen-to-square']"></fa-icon>
+        </button>
+        <button style="cursor: pointer" (click)="openDeleteModalDialog(node)">
+          <fa-icon size="sm" title="Delete" [icon]="['fas', 'trash-can']"></fa-icon>
+        </button>
+      </div>
+
     </mat-tree-node>
   </mat-tree>
 </ng-container>
