@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, map, switchMap, take, tap } from 'rxjs';
 import { ShoppingList } from '../interfaces/shopping-list.interface';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from 'src/app/auth/auth.service';
-import { SHOPPING_LIST_ADD_NEW, SHOPPING_LIST_DELETE, SHOPPING_LIST_UPDATE } from 'src/app/shared/constants/urls';
+import { SHOPPING_LIST_ADD_NEW, SHOPPING_LIST_CHECKED_STATUS, SHOPPING_LIST_DELETE, SHOPPING_LIST_UPDATE } from 'src/app/shared/constants/urls';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,7 @@ export class ShoppingListService {
     )
   }
 
-  getShoppingListsSubject(): Observable<ShoppingList[]> {
+  getShoppingListsSubject(): BehaviorSubject<ShoppingList[]> {
     return this.shoppingListSubject$;
   }
 
@@ -75,5 +75,18 @@ export class ShoppingListService {
         this.shoppingListSubject$.next(response.user.shopping_lists);
       })
     ).subscribe();
+  }
+
+  updateCompletedStatus(shoppingLists: ShoppingList[]) {
+    const user = localStorage.getItem('user');
+    const userObj: User = JSON.parse(user!);
+    return this.http.put<ShoppingList>(SHOPPING_LIST_CHECKED_STATUS(userObj.id),
+      shoppingLists).subscribe((res: any) => {
+        const updatedShoppingLists = this.shoppingListSubject$.value.map((list) =>
+          res.updatedShoppingLists.find((updatedList: ShoppingList) => list.id === updatedList.id) || list
+        );
+        this.shoppingListSubject$.next(updatedShoppingLists);
+      }
+      );
   }
 }

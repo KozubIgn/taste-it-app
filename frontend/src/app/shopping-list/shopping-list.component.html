@@ -6,7 +6,7 @@
       <!-- use a disabled button to provide padding for tree leaf -->
       <button mat-icon-button disabled></button>
       <mat-checkbox color="font-color-disabled" [checked]="checklistSelection.isSelected(node)"
-        (change)="checklistSelection.toggle(node);">
+        (change)="selectionToggle(node)">
         {{node.name}}
         <ng-container *ngIf="node.level === 0 ; else levelOne">({{node.amount}})</ng-container>
         <ng-template #levelOne>: {{node.amount}}</ng-template>
@@ -22,13 +22,13 @@
     </mat-tree-node>
     <!-- This is the tree node template for expandable nodes -->
     <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name">
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name"
+        (click)="handleExpandedNode(node)">
         <mat-icon class="mat-icon-rtl-mirror">
           {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
         </mat-icon>
       </button>
-      <mat-checkbox [checked]="descendantsAllSelected(node)" [indeterminate]="descendantsPartiallySelected(node)"
-        (change)="todoItemSelectionToggle(node)">
+      <mat-checkbox [checked]="node.checked" [indeterminate]="isIndeterminate(node)" (change)="selectionToggle(node)">
         {{node.name}} ({{node.amount}})
       </mat-checkbox>
       <div *ngIf="node.level === 0" class="ml-auto pr-3 flex space-x-2">

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Subject, Subscription, debounceTime } from "rxjs";
 import { ShoppingList } from "./interfaces/shopping-list.interface";
 import { ShoppingListService } from "./services/shopping-list.service";
 import { FlatTreeControl } from "@angular/cdk/tree";
@@ -15,32 +15,28 @@ interface FlatNode {
   name: string;
   level: number;
   amount: number | undefined;
+  children?: any[];
   id?: string;
+  checked?: boolean;
+  indeterminate?: boolean;
 }
+
 @Component({
   selector: 'app-shopping-list',
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.scss'],
 })
+
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  @Input() shoppingLists$: Observable<ShoppingList[]> | undefined;
-  private shoppingListsChangeSub: Subscription | undefined;
-  private _transformer = (node: ShoppingList | Ingredient, level: number): FlatNode => {
-    if ('amount' in node) {
-      return {
-        expandable: false,
-        name: node.name,
-        level: level,
-        amount: node.amount,
-        id: node.id
-      };
-    }
+  private flatNodeTransformer = (node: ShoppingList | Ingredient, level: number): FlatNode => {
     return {
-      expandable: !!node.ingredients && node.ingredients?.length > 0,
+      expandable: !!node.ingredients && node.ingredients.length > 0,
       name: node.name,
-      amount: node.ingredients?.length,
       level: level,
-      id: node.id
+      amount: (node as ShoppingList).ingredients ? (node as ShoppingList).ingredients?.length : (node as Ingredient).amount,
+      id: node.id,
+      checked: node.checked,
+      indeterminate: false,
     };
   };
 
@@ -50,41 +46,143 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   );
 
   treeFlattener = new MatTreeFlattener(
-    this._transformer,
+    this.flatNodeTransformer,
     node => node.level,
     node => node.expandable,
-    node => node.ingredients,
+    node => (node as ShoppingList).ingredients,
   );
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-  checklistSelection = new SelectionModel(true);
-
-  constructor(private shoppingListService: ShoppingListService, private dialog: MatDialog) { }
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
+  @Input() shoppingLists$: BehaviorSubject<ShoppingList[]> | undefined;
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  checklistSelection = new SelectionModel<FlatNode>(true);
+  private shoppingListsSub$: Subscription | undefined;
+  private dataToSendSub$ = new Subject<FlatNode[]>();
+  private selectedNodes: FlatNode[] = [];
+  private expandedNodeIds = new Set<string>();
+  DELAY_TIME = 2000;
+
+  constructor(private shoppingListService: ShoppingListService, private dialog: MatDialog) { }
+
   ngOnInit() {
-    this.shoppingListsChangeSub = this.shoppingLists$?.subscribe((lists: ShoppingList[]) => {
-      this.dataSource.data = lists;
-    })
+    this.shoppingListsSub$ = this.shoppingLists$?.subscribe((lists: any[]) => {
+      this.initializeTree(lists);
+    });
+
+    this.dataToSendSub$.pipe(
+      debounceTime(this.DELAY_TIME)).subscribe((selectedNodes: FlatNode[]) => {
+        if (selectedNodes.length > 0) {
+          this.shoppingListService.updateCompletedStatus(selectedNodes);
+          this.selectedNodes = [];
+        }
+      });
+  };
+
+  initializeTree(data: any): void {
+    this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+    this.dataSource.data = data;
+    this.treeControl.dataNodes.forEach((node: any) => {
+      this.initialNode(node);
+      if (this.expandedNodeIds.has(node.id)) {
+        this.treeControl.expand(node);
+      }
+    });
   }
 
-  descendantsAllSelected(node: any): boolean {
-    const descendants = this.treeControl.getDescendants(node);
-    return descendants.every(child => this.checklistSelection.isSelected(child));
+  initialNode(node: FlatNode) {
+    node.checked ? this.checklistSelection.select(node) : this.checklistSelection.deselect(node);
   }
 
-  descendantsPartiallySelected(node: any): boolean {
-    const descendants = this.treeControl.getDescendants(node);
-    const result = descendants.some(child => this.checklistSelection.isSelected(child));
-    return result && !this.descendantsAllSelected(node);
-  }
-
-  todoItemSelectionToggle(node: any) {
+  selectionToggle(node: any) {
     this.checklistSelection.toggle(node);
+    node.checked = this.checklistSelection.isSelected(node);
+    this.updateParentSelectionState(node);
+    this.updateChildrenSelectionState(node);
+    const nodeData = this.getNodeDataToSend(node);
+    this.selectedNodes.push(nodeData);
+    this.dataToSendSub$.next(this.selectedNodes);
+  }
+
+  handleExpandedNode(event: FlatNode) {
+    this.treeControl.isExpanded(event) ?
+      this.addNodeToSet(event) :
+      this.removeNodeFromSet(event);
+  }
+
+  addNodeToSet(node: FlatNode) {
+    this.expandedNodeIds.add(node.id!);
+  }
+
+  removeNodeFromSet(node: FlatNode) {
+    this.expandedNodeIds.delete(node.id!);
+  }
+
+  private getNodeDataToSend(node: FlatNode) {
+    const parent = this.getParentNode(node);
+    const baseNode = parent ? parent : node;
+    const children = this.treeControl.getDescendants(baseNode);
+    return {
+      ...baseNode,
+      ingredients: children.map(childNode => ({
+        ...childNode,
+        checked: this.checklistSelection.isSelected(childNode),
+        indeterminate: childNode.indeterminate,
+      }))
+    };
+  }
+
+  updateChildrenSelectionState(node: FlatNode) {
+    const children = this.treeControl.getDescendants(node);
+    if (children.length > 0) {
+      children.map(child => {
+        this.checklistSelection.isSelected(node) ? this.checklistSelection.select(child) : this.checklistSelection.deselect(child);
+      })
+    }
+  }
+
+  updateParentSelectionState(node: FlatNode) {
+    let parent: FlatNode | null = this.getParentNode(node);
+    while (parent) {
+      const children = this.treeControl.getDescendants(parent);
+      const allSelected = children.every(child => this.checklistSelection.isSelected(child));
+      const someSelected = children.some(child => this.checklistSelection.isSelected(child));
+
+      if (allSelected) {
+        this.checklistSelection.select(parent);
+        parent.indeterminate = false;
+      } else if (someSelected) {
+        this.checklistSelection.deselect(parent);
+        parent.indeterminate = true;
+      } else {
+        this.checklistSelection.deselect(parent);
+        parent.indeterminate = false;
+      }
+      parent.checked = allSelected;
+      parent.indeterminate = !allSelected && someSelected;
+      parent = this.getParentNode(parent);
+    }
+  }
+
+  isIndeterminate(node: FlatNode): boolean {
     const descendants = this.treeControl.getDescendants(node);
-    this.checklistSelection.isSelected(node)
-      ? this.checklistSelection.select(...descendants)
-      : this.checklistSelection.deselect(...descendants);
+    const result = descendants.some(child => this.checklistSelection.isSelected(child)) && !descendants.every(child => this.checklistSelection.isSelected(child));
+    return result;
+  }
+
+  getParentNode(node: FlatNode): FlatNode | null {
+    const currentLevel = node.level;
+    if (currentLevel < 1) {
+      return null;
+    }
+    const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
+    for (let i = startIndex; i >= 0; i--) {
+      const currentNode = this.treeControl.dataNodes[i];
+      if (currentNode.level < currentLevel) {
+        return currentNode;
+      }
+    }
+    return null;
   }
 
   openEditModalDialog(node?: any) {
@@ -115,7 +213,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     }
   }
 
-  openDeleteModalDialog( node: any) {
+  openDeleteModalDialog(node: any) {
     const dialogRef = this.dialog.open(DeleteDialogComponent, { data: node });
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
@@ -123,6 +221,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   onDeleteShoppingList(id: string) {
     this.shoppingListService.deleteRecipe(id);
   }
@@ -134,6 +233,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.shoppingListsChangeSub?.unsubscribe();
+    this.shoppingListsSub$?.unsubscribe();
   }
 }
