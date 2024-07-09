@@ -30,7 +30,7 @@
 }
 
 $cookIT-primary: mat.define-palette(mat.$purple-palette);
-$cookIT-accent: mat.define-palette(mat.$orange-palette, A400, A100, A700);
+$cookIT-accent: mat.define-palette(mat.$gray-palette, A400, A100, A700);
 
 // The warn palette is optional (defaults to red).
 $cookIT-warn: mat.define-palette(mat.$red-palette);

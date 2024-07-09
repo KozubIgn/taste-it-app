@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ShoppingList } from '../interfaces/shopping-list.interface';
 import { MatDialog } from '@angular/material/dialog';
 import { EditDialogComponent } from '../dialogs/edit-dialog.component';
@@ -12,7 +12,7 @@ import { ShoppingListService } from '../services/shopping-list.service';
   styleUrls: ['./shopping-list-page.component.scss']
 })
 export class ShoppingListPageComponent implements OnInit {
-  shoppingLists$: Observable<ShoppingList[]> | undefined;
+  shoppingLists$: BehaviorSubject<ShoppingList[]> | undefined;
   constructor(private shoppingListService: ShoppingListService, private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -38,8 +38,11 @@ export class ShoppingListPageComponent implements OnInit {
   onAddNewShoppingList(shoppingListForm: FormGroup) {
     const newShoppingList: ShoppingList = {
       name: shoppingListForm.get('name')?.value,
-      ingredients: shoppingListForm.get('ingredients')?.value
-    }
+      ingredients: shoppingListForm.get('ingredients')?.value,
+      checked: false,
+      level: 0,
+      expandable: shoppingListForm.get('ingredients') ? true : false,
+    };
     this.shoppingListService.addNewShoppingList(newShoppingList);
     //handle response
   }

@@ -1,10 +1,12 @@
 import { ThemePalette } from "@angular/material/core";
 import { Ingredient } from "src/app/shared/interfaces/ingredient.interface";
 
-export interface ShoppingList{
+export interface ShoppingList {
     id?: string;
     name: string,
+    expandable: boolean;
+    level: number;
     ingredients?: Ingredient[]
-    completed?: boolean,
+    checked?: boolean,
     color?: ThemePalette
 }
