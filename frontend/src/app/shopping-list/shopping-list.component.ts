@@ -16,8 +16,8 @@ interface FlatNode {
   level: number;
   amount: number | undefined;
   children?: any[];
-  id?: string;
-  checked?: boolean;
+  id?: string | undefined;
+  checked?: boolean | undefined;
   indeterminate?: boolean;
 }
 
@@ -178,7 +178,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const startIndex = this.treeControl.dataNodes.indexOf(node) - 1;
     for (let i = startIndex; i >= 0; i--) {
       const currentNode = this.treeControl.dataNodes[i];
-      if (currentNode.level < currentLevel) {
+      if (currentNode && currentNode.level < currentLevel) {
         return currentNode;
       }
     }
