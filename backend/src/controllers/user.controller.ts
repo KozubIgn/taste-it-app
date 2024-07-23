@@ -1,10 +1,9 @@
 import { compare, hash } from "bcrypt";
 import { UserModel, User } from '../models/user.model';
-import * as jwt from 'jsonwebtoken';
-import { RefreshToken, RefreshTokenModel } from '../models/refreshToken.model';
-import { Types } from "mongoose";
+import { RefreshTokenModel } from '../models/refreshToken.model';
 import { Recipe } from "../models/recipe.model";
 import { ShoppingList } from "../models/shopping-list.model";
+import * as authHelpers from '../helpers/auth.helpers';
 
 export const signup = async (req: any, res: any) => {
     const email = req.body.email;
@@ -22,11 +21,11 @@ export const signup = async (req: any, res: any) => {
         shopping_lists: [],
     };
     await UserModel.create(newUser).then(async (user) => {
-        await generateRefreshTokenModel(user).then(async (tokenModel) => {
-            await setTokenCookie(res, tokenModel.token);
+        await authHelpers.generateRefreshTokenModel(user).then(async (tokenModel) => {
+            await authHelpers.setTokenCookie(res, tokenModel.token);
             res.status(200).send({
-                user: getUserDetails(user),
-                jwtToken: generateJwtTokenForUser(user.id),
+                user: authHelpers.getUserDetails(user),
+                jwtToken: authHelpers.generateJwtTokenForUser(user.id),
                 refreshToken: tokenModel.token
             })
         })
@@ -42,11 +41,11 @@ export const login = async (req: any, res: any) => {
             populate: { path: 'ingredients', model: 'ingredient' }
         })
     if (user && (await compare(password, user.password))) {
-        const jwtToken = generateJwtTokenForUser(user.id);
-        const refreshTokenModel = await generateRefreshTokenModel(user);
-        setTokenCookie(res, refreshTokenModel.token);
+        const jwtToken = authHelpers.generateJwtTokenForUser(user.id);
+        const refreshTokenModel = await authHelpers.generateRefreshTokenModel(user);
+        authHelpers.setTokenCookie(res, refreshTokenModel.token);
         res.status(200).send({
-            user: getUserDetails(user),
+            user: authHelpers.getUserDetails(user),
             jwtToken: jwtToken,
             refreshToken: refreshTokenModel.token,
         });
@@ -61,8 +60,8 @@ export const refreshToken = async (req: any, res: any) => {
         return res.status(403).send({ message: " No token provided!" });
     }
     try {
-        const user = await getUserFromRefreshToken(token);
-        let newRefreshToken = generateTokenForRefreshToken(user.id as string);
+        const user = await authHelpers.getUserFromRefreshToken(token);
+        let newRefreshToken = authHelpers.generateTokenForRefreshToken(user.id as string);
         const refreshToken = JSON.parse(atob(newRefreshToken.split('.')[1]));
         const expirationDate = refreshToken.exp * 1000;
         try {
@@ -75,10 +74,10 @@ export const refreshToken = async (req: any, res: any) => {
             console.error('Error updating refreshToken:', updateError);
             return res.status(500).send({ message: updateError });
         };
-        let newJwtTokenforUser = generateJwtTokenForUser(user.id as string);
-        setTokenCookie(res, newRefreshToken);
+        let newJwtTokenforUser = authHelpers.generateJwtTokenForUser(user.id as string);
+        authHelpers.setTokenCookie(res, newRefreshToken);
         return res.send({
-            user: { ...getUserDetails(user), token: newJwtTokenforUser },
+            user: { ...authHelpers.getUserDetails(user), token: newJwtTokenforUser },
             jwtToken: newJwtTokenforUser,
             refreshToken: newRefreshToken
         });
@@ -92,60 +91,10 @@ export const revokeToken = async (req: any, res: any) => {
     if (!token) { return res.status(400).json({ message: 'Token is required.' }); }
     try {
         await RefreshTokenModel.findOneAndDelete({ token }).then(() => {
-            clearCookie(res);
+            authHelpers.clearCookie(res);
             return res.status(200).send({ message: 'Token revoked successfully' });
         });
     } catch (error) {
         return res.status(500).send({ message: 'Cannot revoke!' });
     }
-}
-
-const generateRefreshTokenModel = async (user: User) => {
-    const userId = user.id as Types.ObjectId;
-    const userIdAsString = user.id as string;
-    const refreshTokenModel: RefreshToken = {
-        token: generateTokenForRefreshToken(userIdAsString),
-        user: userId,
-        expiryDate: new Date(Date.now() + Number(process.env["REFRESH_TOKEN_EXP_TIME_NUMBER"]))
-    }
-    return await RefreshTokenModel.create(refreshTokenModel);
-}
-
-const getUserFromRefreshToken = async (token: string) => {
-    const user = await RefreshTokenModel.findOne({ token: token }).populate<{ user: User }>({
-        path: 'user',
-        populate: [{ path: 'created_recipes', model: 'recipe' },
-        {
-            path: 'shopping_lists', populate: {
-                path: 'ingredients', model: 'ingredient'
-            }
-        }]
-    }).orFail();
-    if (!user || user.isExpired) throw new Error('Invalid token');
-    return user.user;
-}
-
-const setTokenCookie = (res: any, token: string) => {
-    const cookieOptions = {
-        httpOnly: true,
-        expires: new Date(Date.now() + Number(process.env["COOKIE_TIME"]))
-    };
-    res.cookie('refreshToken', token, cookieOptions);
-}
-
-const clearCookie = (res: any) => {
-    res.clearCookie('refreshToken');
-}
-
-const generateTokenForRefreshToken = (id: string) => {
-    return jwt.sign({ id: id }, process.env["JWT_REFRESH_TOKEN_SECRET"]!, { expiresIn: process.env["REFRESH_TOKEN_EXP_TIME"] });
-}
-
-const generateJwtTokenForUser = (userId: string) => {
-    return jwt.sign({ id: userId }, process.env["JWT_SECRET"]!, { expiresIn: process.env["JWT_TOKEN_EXP_TIME"] });
-}
-
-const getUserDetails = (user: User) => {
-    const { id, email, favourite_recipes, created_recipes, custom_objects, shopping_lists, settings } = user;
-    return { id, email, favourite_recipes, created_recipes, custom_objects, shopping_lists, settings };
 }
