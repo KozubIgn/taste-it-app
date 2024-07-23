@@ -142,9 +142,6 @@ export class RecipeFormComponent implements OnInit {
     });
   }
 
-  handleUploadedFile(event: any) {
-  }
-
   onAddIngredient() {
     (<FormArray>this.recipeForm.get('ingredients')).push(
       new FormGroup({
