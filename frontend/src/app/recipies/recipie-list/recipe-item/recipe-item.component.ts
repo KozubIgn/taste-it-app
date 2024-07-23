@@ -27,7 +27,7 @@ export class RecipeItemComponent implements OnInit {
     private route: ActivatedRoute,
     private recipeService: RecipeService) { }
 
-  @HostListener('window:resize', ['$event']) onResize(event?: any) {
+  @HostListener('window:resize', ['$event']) onResize() {
     this.screenWidthSubject$.subscribe(width => {
       this.showListItem = width < 976;
     })
