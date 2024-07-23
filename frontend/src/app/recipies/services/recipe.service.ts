@@ -36,7 +36,7 @@ export class RecipeService {
     )
   }
 
-  getRecipesForListType(listType: ListType | undefined): Observable<Recipe[]> | undefined {
+  getRecipesForListType(listType: ListType): Observable<Recipe[]> {
     switch (listType) {
       case ListType.ALL:
         return this.getRecipesSubject();
@@ -45,8 +45,8 @@ export class RecipeService {
     }
   }
 
-  getFavouritesRecipes(): Observable<Recipe[]> | undefined {
-    return this.recipes$?.pipe(
+  getFavouritesRecipes(): Observable<Recipe[]> {
+    return this.recipes$.pipe(
       map(recipes => recipes.filter(recipe => recipe.favourites))
     )
   }
