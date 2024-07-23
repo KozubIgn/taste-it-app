@@ -110,8 +110,12 @@ export class AuthService {
   }
 
   getExpirationTimeFromToken(token: string | null) {
-    const refreshToken = JSON.parse(atob(token!.split('.')[1]));
-    return new Date(refreshToken.exp * 1000);
+    if (token === undefined || token === null || typeof token !== 'string') {
+      throw new Error("Token is null or not a string");
+    } else {
+      const refreshToken = JSON.parse(atob(token.split('.')[1]));
+      return new Date(refreshToken.exp * 1000);
+    }
   }
 
   public getUser$(): Observable<User| null> {
