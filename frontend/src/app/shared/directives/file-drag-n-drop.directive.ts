@@ -1,6 +1,5 @@
 import { EventEmitter, HostBinding, Output, HostListener, Directive } from '@angular/core';
 import { FileUploadService } from 'src/app/components/file/file-upload/service/file-upload.service';
-import { FileUploadComponent } from '../../components/file/file-upload/file-upload.component';
 
 @Directive({
   selector: '[appDragAndDropFile]',
@@ -10,7 +9,7 @@ export class DragAndDropFileDirective {
   public fileDropped: EventEmitter<File[]> = new EventEmitter<File[]>();
   private isFileDropped: boolean = false;
 
-  constructor(private fileuploadService: FileUploadService, private fileUploadComponent: FileUploadComponent) {
+  constructor(private fileuploadService: FileUploadService) {
   }
 
   @HostBinding('style.background')

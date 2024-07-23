@@ -15,7 +15,7 @@ import { ListType } from '../enums/list-type.enum';
 })
 export class RecipieListComponent implements OnInit {
   recipes$: Observable<Recipe[]> | undefined;
-  listType: ListType | undefined;
+
 
   constructor(
     private recipeService: RecipeService,

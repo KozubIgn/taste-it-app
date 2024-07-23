@@ -7,8 +7,6 @@ import { AbstractControl, FormArray, FormControl, FormGroup, FormsModule, Reacti
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { IconModule } from 'src/app/shared/modules/icon.module';
-import { ShoppingListService } from '../services/shopping-list.service';
-import { DialogConfig } from '@angular/cdk/dialog';
 
 @Component({
     selector: 'edit-dialog',
@@ -36,7 +34,6 @@ export class EditDialogComponent implements OnInit {
     shoppingList: ShoppingList | undefined;
 
     constructor(private router: Router,
-        private ShoppingListService: ShoppingListService,
         public dialogRef: MatDialogRef<EditDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,) { 
         const dialogConfig = new MatDialogConfig();

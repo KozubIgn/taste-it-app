@@ -7,15 +7,13 @@ import { FAVOURITES, RECIPES, RECIPE_ADD_NEW, RECIPE_DELETE, RECIPE_UPDATE } fro
 import { User } from 'src/app/auth/user.model';
 import { AuthService } from '../../auth/auth.service';
 import { ListType } from '../enums/list-type.enum';
-import { UploadedFile } from '../../shared/interfaces/upload-file.interface';
 
 @Injectable({ providedIn: 'root' })
 export class RecipeService {
   recipesChanged$ = new Subject<Recipe[]>;
   private recipeSubject$ = new BehaviorSubject<Recipe | undefined>(undefined);
   private recipesSubject$ = new BehaviorSubject<Recipe[]>([]);
-  recipes$: Observable<Recipe[]> | undefined = this.recipesSubject$.asObservable();
-  private recipes: Recipe[] = [];
+  recipes$: Observable<Recipe[]>  = this.recipesSubject$.asObservable();
   shoppingListService: any;
 
   constructor(private http: HttpClient, private authService: AuthService) {
