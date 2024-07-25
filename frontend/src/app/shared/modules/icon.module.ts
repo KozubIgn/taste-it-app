@@ -27,11 +27,16 @@ import {
   faCarrot,
   faPenToSquare,
   faTrashCan,
-  faFireBurner
+  faFireBurner,
+  faBowlRice,
+  faBlender,
+  faCartPlus
 } from '@fortawesome/free-solid-svg-icons';
 import {
+  faHeart as farHeart,
   faSquarePlus,
   faStar as farStar,
+  faCircleXmark
 } from '@fortawesome/free-regular-svg-icons';
 
 @NgModule({
@@ -46,6 +51,7 @@ export class IconModule {
       faStar,
       faHouse,
       faHeart,
+      farHeart,
       faSquarePlus,
       faUtensils,
       faArrowLeft,
@@ -66,7 +72,11 @@ export class IconModule {
       faCarrot,
       faPenToSquare,
       faTrashCan,
-      faFireBurner
+      faFireBurner,
+      faCircleXmark,
+      faBowlRice,
+      faBlender,
+      faCartPlus
     );
   }
 }

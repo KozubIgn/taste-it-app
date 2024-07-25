@@ -32,25 +32,7 @@
     position: relative;
 }
 
-.recipe-info-row {
-    display: flex;
-    flex-flow: row wrap;
-    flex: auto;
-    margin: 0;
-    padding: 10px;
 
-    .item-row {
-        display: flex;
-        flex-direction: row;
-        max-width: 200px;
-        margin: 0;
-        padding: 0.5vw;
-
-        fa-icon {
-            margin-right: 3px;
-        }
-    }
-}
 
 .recipe-tags {
     flex-flow: row wrap;

@@ -1,17 +1,23 @@
 <a class="wrapper">
-  <div class="ft-recipe">
-    <div class="thumb">
+  <div class="ft-recipe flex flex-row w-full m-1 p-2 lg:flex-wrap lg:justify-center">
+    <div class=" relative thumb lg:h-44 lg:w-full w-1/3">
       <img src="{{urlString?.url}}" alt="{{ recipe.name }}" />
+        <fa-icon *ngIf="recipe.favourites" title="Added to favourites" class="absolute top-0 left-0 ml-1 mt-1 drop-shadow-[0_1px_5px_rgba(248,248,248,1)] text-lg text-primaryCol"
+        [icon]="['fas','heart']"></fa-icon>
     </div>
-    <div class="content">
-
-      <div class="row-wrapper">
-        <p class="recipe-title">{{recipe.name}}</p>
+    <div class="content flex flex-col w-2/3 lg:w-full">
+      <div>
+        <p class="recipe-title truncate">{{recipe.name}}</p>
       </div>
       <ul class="recipe-details">
-        <li class="recipe-details-item">
+          <li class="recipe-details-item">
+            <span class="value"> <fa-icon [icon]="['fas', 'clock']"></fa-icon>
+              {{recipe.cookTime ? recipe.cookTime : noValue}} </span>
+            <span class="title">Minutes</span>
+          </li>
+        <li class=" recipe-details-item" *ngIf="showListItem">
           <span class="value">
-            <fa-icon [icon]="['fas', 'clock']"></fa-icon>
+            <fa-icon class="text-primaryCol" [icon]="['fas', 'blender']"></fa-icon>
             {{recipe.prepTime ? recipe.prepTime : noValue }} </span>
           <span class="title">Minutes</span>
         </li>
@@ -26,13 +32,10 @@
           <span class="title">{{recipe.vieldType ? recipe.vieldType : text}}</span>
         </li>
       </ul>
-
-      <p class="description">{{ recipe.description }}</p>
-      <footer class="content footer">
-        <button mat-raised-button color="primary" (click)="onViewRecipe(recipe)">
+      <p class="description text-clip-4 overflow-hidden">{{ recipe.description }}</p>
+      <div class="self-center"><button mat-raised-button color="primary" (click)="onViewRecipe(recipe)">
           View Recipe
-        </button>
-      </footer>
+        </button></div>
     </div>
   </div>
 </a>

@@ -1,30 +1,31 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 import {
+  HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { exhaustMap, take, tap } from 'rxjs';
+import { Observable } from 'rxjs';
+import { User } from './user.model';
 
 @Injectable()
-export class AuthInterceptroService implements HttpInterceptor {
-  constructor(private authService: AuthService) { }
+export class AuthInterceptorService implements HttpInterceptor {
 
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
-    return this.authService.user$.pipe(
-      take(1),
-      exhaustMap((user) => {
-        if (!user) {
-          return next.handle(req);
-        }
-        const modifiedReq = req.clone({
-          setHeaders: {
-            access_token: user.token!
-          },
-        });
-        return next.handle(modifiedReq);
-      })
-    );
+  constructor() { }
+
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<Object>> {
+    const stringuser = localStorage.getItem('user');
+    const user: User | null = JSON.parse(stringuser!);
+    const token = localStorage.getItem('jwt-token');
+    const isLoggedIn = user && token
+    const isApiUrl = req.url.startsWith('http://localhost:5000');
+    if (isLoggedIn && isApiUrl) {
+      req = this.addTokenHeader(req, token);
+    }
+    return next.handle(req)
+  }
+
+  addTokenHeader(req: HttpRequest<any>, userToken: string) {
+    return req.clone({ setHeaders: { 'access_token': userToken } });
   }
 }

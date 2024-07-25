@@ -1,11 +1,22 @@
 const BASE_URL = 'http://localhost:5000';
 
-export const RECIPES_ALL_URL = BASE_URL + '/api/recipes';
-export const RECIPE_ADD_NEW = RECIPES_ALL_URL + '/new';
-export const RECIPES_BY_SEARCH_URL = RECIPES_ALL_URL + '/search/'; // behind slash leave an empty space for adding searchTeerm
+export const RECIPES = BASE_URL + '/api/recipes';
+export const RECIPE_ADD_NEW = (userId: string) => `${RECIPES}/${userId}/recipe/new`;
+export const RECIPE_DELETE = (userId: string, recipeId: string) => `${RECIPES}/${userId}/recipes/${recipeId}`;
+export const RECIPE_UPDATE = (userId: string, recipeId: string) => `${RECIPES}/${userId}/recipes/${recipeId}`;
+export const FAVOURITES = (recipeId: string) => `${RECIPES}/${recipeId}/favourites`;
+export const RECIPES_BY_SEARCH_URL = RECIPES + '/search/'; // behind slash leave an empty space for adding searchTeerm
 export const RECIPES_BY_ID = BASE_URL + 'api/recipes/';
 export const TAGS_URL = BASE_URL + '/api/tags';
 
-export const USER_SIGN_UP = BASE_URL + '/api/user/signup';
-export const USER_LOGIN = BASE_URL + '/api/user/login';
+export const AUTH = BASE_URL + '/api/auth/';
+export const USER_SIGN_UP = AUTH + 'signup';
+export const USER_LOGIN = AUTH + 'login';
+export const REFRESH_TOKEN = AUTH + 'refresh-token';
+export const REVOKE_TOKEN = AUTH + 'revoke-token';
 
+export const SHOPPING_LIST = BASE_URL + '/api/shopping-lists';
+export const SHOPPING_LIST_ADD_NEW = (userId: string) => `${SHOPPING_LIST}/${userId}/new`;
+export const SHOPPING_LIST_UPDATE = (userId: string, shoppingListId: string) => `${SHOPPING_LIST}/${userId}/shopping-list/${shoppingListId}`;
+export const SHOPPING_LIST_DELETE = (userId: string, shoppingListId: string) => `${SHOPPING_LIST}/${userId}/shopping-list/${shoppingListId}`;
+export const SHOPPING_LIST_CHECKED_STATUS = (userId: string) => `${SHOPPING_LIST}/${userId}/shopping-lists`;

@@ -1,0 +1,17 @@
+<div class="board-wrapper">
+    <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
+    <div class="pg-row">
+        <div class="pg-top-row">
+            <button mat-raised-button color="primary" (click)="onNewShoppingList()">
+                <fa-icon [icon]="['fas','cart-plus']"></fa-icon>
+                New list
+            </button>
+        </div>
+        <div class="flex flex-col w-full lg:flex-wrap lg:justify-start">
+            <ng-container *ngIf="shoppingLists$ | async">
+                <app-shopping-list [shoppingLists$]="shoppingLists$"></app-shopping-list>
+            </ng-container>
+          
+        </div>
+    </div>
+</div>

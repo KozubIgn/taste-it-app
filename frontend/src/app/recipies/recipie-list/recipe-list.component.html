@@ -7,9 +7,10 @@
         Add Recipe
       </button>
     </div>
-    <div class="card-list">
-      <ng-container *ngFor="let recipeElement of recipes">
-        <app-recipe-item [recipe]="recipeElement"></app-recipe-item>
+    <div class="flex flex-col w-full lg:flex-row lg:flex-wrap lg:justify-start">
+      <ng-container *ngIf="recipes$ | async as recipes">
+        <app-recipe-item class="w-full m-1.5 mt-0 lg:w-64 " *ngFor="let recipeElement of recipes"
+          [recipe]="recipeElement" (click)="onSelectRecipeItem(recipeElement)"></app-recipe-item>
       </ng-container>
     </div>
   </div>

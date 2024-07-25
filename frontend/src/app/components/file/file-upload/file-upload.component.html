@@ -1,5 +1,5 @@
 <div class="file-upload">
-    <div>
+    <div class="flex flex-wrap ">
         <input #fileInput type="file" id="file" (change)="handleUploadFiles($event)" accept="image/**" multiple />
         <button mat-raised-button color="primary" type="button" (click)="fileInput.click()">
             <fa-icon [icon]="['fas', 'image']"></fa-icon> Add photo
@@ -8,11 +8,11 @@
             {{ errorFile.error?.name }} {{ errorFile.error?.errorMessage }}
         </div>
     </div>
-
-    <div class="dropzone"appDragAndDropFile (fileDropped)="fileDropped($event)">
-        <div class="uploaded-file-container" *ngFor="let uploadedFile of uploadedFiles">
-            <img [src]="uploadedFile.url" class="preview" />    
-            <button (click)="removeFile(uploadedFile)">x</button>
+    <div class="dropzone" appDragAndDropFile (fileDropped)="fileDropped($event)">
+        <div class="relative preview" *ngFor="let uploadedFile of uploadedFiles">
+            <img [src]="uploadedFile.url" />
+            <button class="absolute top-0.5 right-1" (click)="removeFile(uploadedFile)"><fa-icon
+                    class="text-backgroundCol" [icon]="['fas', 'xmark']"></fa-icon></button>
         </div>
     </div>
 </div>

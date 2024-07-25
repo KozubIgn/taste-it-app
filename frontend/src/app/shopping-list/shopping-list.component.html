@@ -1,19 +1,51 @@
-<div class="row">
-  <div class="col-xs-10">
-    <app-shopping-edit></app-shopping-edit>
-    <hr />
-    <ul class="list-group">
-      <a
-        class="list-group-item"
-        style="cursor: pointer"
-        *ngFor="let ingredient of ingredients; let i = index"
-        (click)="onEditItem(i)"
-      >
-        <li class="row">
-          {{ ingredient.name }}
-          <p>{{ ingredient.amount }}</p>
-        </li>
-      </a>
-    </ul>
+<ng-container *ngIf="dataSource.data.length> 0; else noData">
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <!-- This is the tree node template for leaf nodes -->
+    <mat-tree-node [ngClass]=" node.level === 1 ? 'bg-lightFontDisabled' : '' " *matTreeNodeDef="let node"
+      matTreeNodePadding>
+      <!-- use a disabled button to provide padding for tree leaf -->
+      <button mat-icon-button disabled></button>
+      <mat-checkbox color="font-color-disabled" [checked]="checklistSelection.isSelected(node)"
+        (change)="selectionToggle(node)">
+        {{node.name}}
+        <ng-container *ngIf="node.level === 0 ; else levelOne">({{node.amount}})</ng-container>
+        <ng-template #levelOne>: {{node.amount}}</ng-template>
+      </mat-checkbox>
+      <div *ngIf="node.level === 0" class="ml-auto pr-3 flex space-x-2">
+        <button style="cursor: pointer" (click)="openEditModalDialog(node)">
+          <fa-icon size="sm" title="Edit" [icon]="['fas', 'pen-to-square']"></fa-icon>
+        </button>
+        <button style="cursor: pointer" (click)="openDeleteModalDialog(node)">
+          <fa-icon size="sm" title="Delete" [icon]="['fas', 'trash-can']"></fa-icon>
+        </button>
+      </div>
+    </mat-tree-node>
+    <!-- This is the tree node template for expandable nodes -->
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.name"
+        (click)="handleExpandedNode(node)">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+      <mat-checkbox [checked]="node.checked" [indeterminate]="isIndeterminate(node)" (change)="selectionToggle(node)">
+        {{node.name}} ({{node.amount}})
+      </mat-checkbox>
+      <div *ngIf="node.level === 0" class="ml-auto pr-3 flex space-x-2">
+        <button style="cursor: pointer" (click)="openEditModalDialog(node)">
+          <fa-icon size="sm" title="Edit" [icon]="['fas', 'pen-to-square']"></fa-icon>
+        </button>
+        <button style="cursor: pointer" (click)="openDeleteModalDialog(node)">
+          <fa-icon size="sm" title="Delete" [icon]="['fas', 'trash-can']"></fa-icon>
+        </button>
+      </div>
+
+    </mat-tree-node>
+  </mat-tree>
+</ng-container>
+
+<ng-template #noData>
+  <div class="w-full h-64 flex bg-white">
+    <fa-icon class="flex justify-center m-auto text-fontLabel" [size]="'4x'" [icon]="['fas','carrot']"></fa-icon>
   </div>
-</div>
+</ng-template>

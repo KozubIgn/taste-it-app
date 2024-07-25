@@ -10,15 +10,13 @@ import { User } from '../auth/user.model';
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   open: boolean = false;
-  isAuthenticated = false;
   user: User | null | undefined;
   private userSub: Subscription | undefined;
 
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
-    this.userSub = this.authService.user$.subscribe(user => {
-      this.isAuthenticated = !!user;
+    this.userSub = this.authService.userSub$.subscribe(user => {
       this.user = user;
     });
   }
