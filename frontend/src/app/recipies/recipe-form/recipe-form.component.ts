@@ -30,7 +30,7 @@ export class RecipeFormComponent implements OnInit {
     private route: ActivatedRoute,
     private recipeService: RecipeService,
     private router: Router,
-    private fileUplaodService: FileUploadService,
+    private fileUploadService: FileUploadService,
     private tagService: TagService,
   ) { }
 
