@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UploadedFile } from 'src/app/shared/interfaces/upload-file.interface';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { FileUploadService } from './service/file-upload.service';
@@ -15,7 +15,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         }
     ]
 })
-export class FileUploadComponent implements OnInit, ControlValueAccessor {
+export class FileUploadComponent implements ControlValueAccessor {
     uploadedFile?: UploadedFile;
     uploadedFiles: UploadedFile[] = [];
     files: UploadedFile[] = [];
