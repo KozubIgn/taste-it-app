@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, Observer, catchError, concatMap, from, of } from 'rxjs';
 import { FileContentType } from 'src/app/enums/file-content-type.enum';
 import { Base64 } from 'src/app/shared/interfaces/base64.interface';
@@ -8,13 +7,11 @@ import { UploadedFile } from 'src/app/shared/interfaces/upload-file.interface';
 
 @Injectable({ providedIn: 'root' })
 export class FileUploadService {
-    uploadedFilesSubject$: BehaviorSubject<UploadedFile[]> =
-        new BehaviorSubject<UploadedFile[]>([this.defaultFile()]);
+    uploadedFilesSubject$: BehaviorSubject<UploadedFile[]> = new BehaviorSubject<UploadedFile[]>([]);
     uploadedFiles: UploadedFile[] = [];
-    private baseUrl = 'http://localhost:8080';
     private maxFileMBSize: number = 2;
     private maxFileKbSize: number = 2048;
-    constructor(private http: HttpClient, private alertService: AlertService) { }
+    constructor(private alertService: AlertService) { }
 
     uploadFiles(files: FileList): Observable<any> {
         return from(files)
@@ -31,8 +28,7 @@ export class FileUploadService {
         return new Observable((observer: Observer<UploadedFile>) => {
             if (this.validateSize(file, observer)) {
                 fileReader.readAsDataURL(file);
-                fileReader.onload = (event: any) => {
-
+                fileReader.onload = (_event: any) => {
                     if (this.isImage(type, observer)) {
                         observer.next({ file, url: fileReader.result as string });
                         observer.complete();
@@ -61,10 +57,6 @@ export class FileUploadService {
             return false;
         }
         return true;
-    }
-
-    getFiles(): Observable<any> {
-        return this.http.get(`${this.baseUrl}/files`);
     }
 
     private isValidSize(size: number): boolean {
