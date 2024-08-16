@@ -30,7 +30,7 @@ export class RecipeFormComponent implements OnInit {
     private route: ActivatedRoute,
     private recipeService: RecipeService,
     private router: Router,
-    private fileUplaodService: FileUploadService,
+    private fileUploadService: FileUploadService,
     private tagService: TagService,
   ) { }
 
@@ -71,7 +71,7 @@ export class RecipeFormComponent implements OnInit {
     const newRecipe: Recipe = {
       name: this.recipeForm.value['name'],
       description: this.recipeForm.value['description'],
-      imagePath: this.recipeForm.value['imagePath'],
+      imagePath: this.addDefautImageWhenEmpty(this.recipeForm.value['imagePath']),
       tags: tags,
       note: this.recipeForm.value['note'],
       instruction: this.recipeForm.value['instruction'],
@@ -87,7 +87,7 @@ export class RecipeFormComponent implements OnInit {
   }
   private initForm() {
     let recipeName: string | undefined = '';
-    let recipeImagePath: UploadedFile[] | undefined = this.uploadedFiles;
+    let recipeImagePath: UploadedFile[] | undefined = [];
     let recipeDescription: string | undefined = '';
     let note: string | undefined = '';
     let instruction: string | undefined = '';
@@ -156,6 +156,10 @@ export class RecipeFormComponent implements OnInit {
 
   isInvalid(control: AbstractControl | null): boolean {
     return !!control && control.invalid && (control.touched || control.dirty);
+  }
+
+  private addDefautImageWhenEmpty(images: UploadedFile[]) {
+    return (images && images.length === 0) ? [this.fileUploadService.defaultFile()] : images;
   }
 
   onDeleteIngredient(index: number) {

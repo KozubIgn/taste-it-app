@@ -8,11 +8,19 @@
             {{ errorFile.error?.name }} {{ errorFile.error?.errorMessage }}
         </div>
     </div>
-    <div class="dropzone" appDragAndDropFile (fileDropped)="fileDropped($event)">
-        <div class="relative preview" *ngFor="let uploadedFile of uploadedFiles">
-            <img [src]="uploadedFile.url" />
-            <button class="absolute top-0.5 right-1" (click)="removeFile(uploadedFile)"><fa-icon
-                    class="text-backgroundCol" [icon]="['fas', 'xmark']"></fa-icon></button>
-        </div>
+    <div class="dropzone" appDragAndDropFile (fileDropped)="onfileDropped($event)">
+        <ng-container *ngIf="uploadedFiles.length > 0 ; else noFile ">
+            <div class="relative preview" *ngFor="let uploadedFile of uploadedFiles">
+                <img [src]="uploadedFile.url" />
+                <button class="absolute top-0.5 right-1" (click)="removeFile(uploadedFile)"><fa-icon
+                        class="text-backgroundCol" [icon]="['fas', 'xmark']"></fa-icon></button>
+            </div>
+        </ng-container>
     </div>
 </div>
+<ng-template #noFile>
+    <div class="flex flex-col items-center m-auto text-fontLabel"> <fa-icon [size]="'3x'" [icon]="['far','hand']">
+        </fa-icon>
+        <p>or drag here</p>
+    </div>
+</ng-template>

@@ -1,61 +1,49 @@
 import { EventEmitter, HostBinding, Output, HostListener, Directive } from '@angular/core';
-import { FileUploadService } from 'src/app/components/file/file-upload/service/file-upload.service';
+import { UploadedFile } from '../interfaces/upload-file.interface';
+enum DropColor {
+  Default = '#FFFFFF',
+  Over = '#DEE2E6',
+}
 
 @Directive({
   selector: '[appDragAndDropFile]',
 })
 export class DragAndDropFileDirective {
-  @Output()
-  public fileDropped: EventEmitter<File[]> = new EventEmitter<File[]>();
-  private isFileDropped: boolean = false;
+  @Output() public fileDropped: EventEmitter<UploadedFile[]> = new EventEmitter();
+  @HostBinding('style.background') backgroundColor: string = DropColor.Default;
 
-  constructor(private fileuploadService: FileUploadService) {
-  }
-
-  @HostBinding('style.background')
-  public bgColor: string | undefined;
-
-  @HostListener('dragover', ['$event'])
-  public onDragOver(event: DragEvent): void {
+  @HostListener('dragover', ['$event']) public onDragOver(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    this.bgColor = 'green';
+    this.backgroundColor = DropColor.Over;
   }
 
-  @HostListener('dragleave', ['$event'])
-  public onDragLeave(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    if (!this.isFileDropped) {
-      this.bgColor = 'transparent';
-    }
-  }
-
-  @HostListener('drop', ['$event'])
-  public onDragDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    const droppedFiles: FileList | undefined = event?.dataTransfer?.files;
-    if (droppedFiles?.length && droppedFiles != null) {
-      this.fileuploadService.uploadFiles(droppedFiles);
-      return;
-    }
-    this.bgColor = 'transparent';
-  }
-
-  @HostListener('mouseover', ['$event'])
-  public onMouseOver(event: DragEvent): void {
+  @HostListener('dragleave', ['$event']) public onDragLeave(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
 
+    this.backgroundColor = DropColor.Default;
+
   }
 
-  @HostListener('mouseleave', ['$event'])
-  public onMouseLeave(event: DragEvent): void {
+  @HostListener('drop', ['$event']) public onDrop(event: DragEvent): void {
     event.preventDefault();
     event.stopPropagation();
-    if (!this.isFileDropped) {
-      this.bgColor = 'transparent';
-    }
+    this.backgroundColor = DropColor.Default;
+
+    const fileList: FileList | undefined = event.dataTransfer?.files;
+    const files: UploadedFile[] = [];
+
+    if (fileList !== undefined && fileList?.length >= 1) {
+      Array.from(fileList).map((file: File) => {
+        const url = window.URL.createObjectURL(file);
+        files.push(
+          {
+            file: file,
+            url: url
+          });
+      })
+      this.fileDropped.emit(files);
+    };
   }
 }

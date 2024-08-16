@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UploadedFile } from 'src/app/shared/interfaces/upload-file.interface';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { FileUploadService } from './service/file-upload.service';
@@ -15,10 +15,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
         }
     ]
 })
-export class FileUploadComponent implements OnInit, ControlValueAccessor {
+export class FileUploadComponent implements ControlValueAccessor {
     uploadedFile?: UploadedFile;
     uploadedFiles: UploadedFile[] = [];
-    files: File[] = [];
+    files: UploadedFile[] = [];
     imagePreviewUrls: string[] = [];
     hasErrorFiles: UploadedFile[] = [];
     fileUploadId: string = '';
@@ -27,11 +27,7 @@ export class FileUploadComponent implements OnInit, ControlValueAccessor {
 
     constructor(private fileUploadService: FileUploadService, private alertService: AlertService) { }
 
-    ngOnInit(): void {
-        this.fileUploadService.AddDefaultFile();
-    }
-
-    fileDropped(selectedFiles: File[]) {
+    onfileDropped(selectedFiles: UploadedFile[]) {
         if (!selectedFiles) {
             return;
         }
@@ -40,8 +36,8 @@ export class FileUploadComponent implements OnInit, ControlValueAccessor {
             this.alertService.error(`to many files. Allowed amount files is ${this.MAX_FILES_AMOUNT}`);
             return;
         }
-        selectedFiles.forEach((file: File) => this.files.push(file));
-        this.fileUploadService.uploadedFilesSubject$.next(this.uploadedFiles);
+        selectedFiles.forEach((file: UploadedFile) => this.files.push(file));
+        this.fileUploadService.uploadedFilesSubject$.next(this.files);  
     }
 
     removeFile(file: UploadedFile): void {

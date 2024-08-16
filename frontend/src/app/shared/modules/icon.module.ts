@@ -36,7 +36,8 @@ import {
   faHeart as farHeart,
   faSquarePlus,
   faStar as farStar,
-  faCircleXmark
+  faCircleXmark,
+  faHand
 } from '@fortawesome/free-regular-svg-icons';
 
 @NgModule({
@@ -76,7 +77,8 @@ export class IconModule {
       faCircleXmark,
       faBowlRice,
       faBlender,
-      faCartPlus
+      faCartPlus,
+      faHand
     );
   }
 }
