@@ -69,21 +69,26 @@ export class FileUploadService {
         return new Promise<Base64>((resolve, reject) => {
             try {
                 reader.readAsDataURL(file);
-                return reader.onload = () => {
+                reader.onload = () => {
                     const splitBase64Info: string[] = (reader.result as string).split(',');
-                    const base64: string = splitBase64Info[1];
-                    const contentType = splitBase64Info[0].split(';')[0] as FileContentType;
-                    resolve({
-                        fileName: File.name,
-                        base64,
-                        contentType
-                    });
+                    const base64: string | undefined = splitBase64Info[1];
+                    const contentType = splitBase64Info[0]?.split(';')[0] as FileContentType;
+                    if (base64) {
+                        resolve({
+                            fileName: file.name,
+                            base64,
+                            contentType
+                        });
+                    } else {
+                        reject(new Error('Base64 conversion failed'));
+                    }
                 };
-            } catch {
-                reject(() => {
-                    this.alertService.error('coś poszlo nie tak');
-                    return;
-                });
+                reader.onerror = () => {
+                    reject(new Error('File reading failed'));
+                };
+            } catch (error) {
+                reject(error);
+                this.alertService.error('Something goes wrong! Try again.');
             }
         });
     }
