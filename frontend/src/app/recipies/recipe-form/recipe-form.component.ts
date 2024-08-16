@@ -87,7 +87,7 @@ export class RecipeFormComponent implements OnInit {
   }
   private initForm() {
     let recipeName: string | undefined = '';
-    let recipeImagePath: UploadedFile[] | undefined = this.uploadedFiles;
+    let recipeImagePath: UploadedFile[] | undefined = [];
     let recipeDescription: string | undefined = '';
     let note: string | undefined = '';
     let instruction: string | undefined = '';
