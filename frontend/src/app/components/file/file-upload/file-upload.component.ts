@@ -62,7 +62,7 @@ export class FileUploadComponent implements ControlValueAccessor {
         })
     }
 
-    onChange = (value: UploadedFile[]) => [];
+    onChange = (_value: UploadedFile[]) => [];
     onTouched = () => { };
     writeValue(obj: UploadedFile[]): void {
         this.uploadedFiles = obj
