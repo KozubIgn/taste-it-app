@@ -7,7 +7,7 @@ import { Recipe } from '../interfaces/recipe.interface';
 import { UploadedFile } from 'src/app/shared/interfaces/upload-file.interface';
 import { FileUploadService } from 'src/app/components/file/file-upload/service/file-upload.service';
 import { TagService } from 'src/app/shared/services/tag.service';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-form',
@@ -37,11 +37,8 @@ export class RecipeFormComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
     this.recipeService.getRecipeSubject().subscribe(recipe => { this.recipe = recipe; });
-    this.tagService.getAllTags().subscribe(Alltags => { this.tags = Alltags; });
+    this.tags$ = this.tagService.getAllTags().pipe(tap(Alltags => { this.tags = Alltags; }));
     this.editMode = this.isEditRoute();
-    this.fileUplaodService.uploadedFilesSubject$.subscribe((files) => {
-      this.uploadedFiles = files;
-    });
     this.initForm();
   }
 

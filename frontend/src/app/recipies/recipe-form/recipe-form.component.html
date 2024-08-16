@@ -25,7 +25,7 @@
         <div class="py-2 px-1.5">
           <label class="pl-2 py-0.5" for="tags">Tags</label>
           <div class="ml-3"> <mat-chip-listbox multiple="true" formControlName="tags" *ngIf="tags">
-              <mat-chip-option color="primary" *ngFor="let tag of tags" [value]="tag.id"
+              <mat-chip-option color="primary" *ngFor="let tag of tags$ | async" [value]="tag.id"
                 [selected]="isTagSelected(tag)">
                 {{tag.name}}
               </mat-chip-option>
