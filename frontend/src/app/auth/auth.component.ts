@@ -34,7 +34,7 @@ export class AuthComponent {
       authObs = this.authService.signUp(email, password);
     }
     authObs.subscribe({
-      next: (responseData) => {
+      next: (_responseData) => {
         this.isLoading = false;
         this.router.navigate(['/dashboard']);
       },
