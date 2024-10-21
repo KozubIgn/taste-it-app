@@ -24,8 +24,8 @@ export class RecipieListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
-      const listType: ListType = data['listType'];
+    this.route.data.subscribe(params => {
+      const listType: ListType = params['listType'];
       this.recipes$ = this.recipeService.getRecipesForListType(listType);
     })
   }

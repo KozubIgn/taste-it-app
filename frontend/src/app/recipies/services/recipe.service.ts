@@ -13,7 +13,7 @@ export class RecipeService {
   recipesChanged$ = new Subject<Recipe[]>;
   private recipeSubject$ = new BehaviorSubject<Recipe | undefined>(undefined);
   private recipesSubject$ = new BehaviorSubject<Recipe[]>([]);
-  recipes$: Observable<Recipe[]>  = this.recipesSubject$.asObservable();
+  recipes$: Observable<Recipe[]> = this.recipesSubject$.asObservable();
   shoppingListService: any;
 
   constructor(private http: HttpClient, private authService: AuthService) {
@@ -23,7 +23,7 @@ export class RecipeService {
   getAllRecipes(): Observable<Recipe[]> {
     return this.http.get<Recipe[]>(RECIPES);
   }
-  getRecipesSubject(): Observable<Recipe[]>{
+  getRecipesSubject(): Observable<Recipe[]> {
     return this.recipesSubject$;
   }
 
