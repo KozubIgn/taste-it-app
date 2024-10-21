@@ -38,7 +38,7 @@ export class RecipeService {
 
   getRecipesForListType(listType: ListType): Observable<Recipe[]> {
     switch (listType) {
-      case ListType.ALL:
+      case ListType.RECIPES:
         return this.getRecipesSubject();
       case ListType.FAVOURITES:
         return this.getFavouritesRecipes();
