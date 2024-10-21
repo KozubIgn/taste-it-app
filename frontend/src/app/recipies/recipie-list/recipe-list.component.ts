@@ -31,7 +31,7 @@ export class RecipieListComponent implements OnInit {
   }
 
   onNewRecipe() {
-    this.router.navigate(['./new'], { relativeTo: this.route });
+    this.router.navigate(['dashboard/new']);
   }
 
   onSelectRecipeItem(recipe: Recipe) {
