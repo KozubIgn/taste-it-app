@@ -12,7 +12,8 @@ import { ShoppingListPageComponent } from './shopping-list/shopping-page/shoppin
 
 const appRoutes: Routes = [
   { path: 'auth', component: AuthComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard],
+  {
+    path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard],
     children: [
       { path: '', component: HomeStartComponent },
       { path: 'new', component: RecipeFormComponent },
