@@ -18,7 +18,7 @@ const appRoutes: Routes = [
       { path: 'new', component: RecipeFormComponent },
       { path: 'shopping-list', component: ShoppingListPageComponent },
       {
-        path: ':listType', 
+        path: ':listType',
         children: [
           { path: '', component: RecipieListComponent },
             { path: 'new', component: RecipeFormComponent },
