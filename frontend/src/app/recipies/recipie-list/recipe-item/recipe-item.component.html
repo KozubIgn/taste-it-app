@@ -13,23 +13,23 @@
           <li class="recipe-details-item">
             <span class="value"> <fa-icon [icon]="['fas', 'clock']"></fa-icon>
               {{recipe.cookTime ? recipe.cookTime : noValue}} </span>
-            <span class="title truncate">Minutes</span>
+            <span class="hidden xs:inline title truncate">Minutes</span>
           </li>
         <li class=" recipe-details-item" *ngIf="showListItem">
           <span class="value">
             <fa-icon class="text-primaryCol" [icon]="['fas', 'blender']"></fa-icon>
             {{recipe.prepTime ? recipe.prepTime : noValue }} </span>
-          <span class="title">Minutes</span>
+          <span class="hidden xs:inline title">Minutes</span>
         </li>
         <li class="recipe-details-item">
           <span class="value"> <fa-icon [icon]="['fas', 'carrot']"></fa-icon>
             {{recipe.ingredients?.length ? recipe.ingredients?.length : noValue}} </span>
-          <span class="title">Ingredients</span>
+          <span class="hidden xs:inline title">Ingredients</span>
         </li>
         <li class="recipe-details-item">
           <span class="value"> <fa-icon [icon]="['fas', 'bowl-food']"></fa-icon>
             {{recipe.vield ? recipe.vield : noValue}}</span>
-          <span class="title">{{recipe.vieldType ? recipe.vieldType : text}}</span>
+          <span class="hidden xs:inline title">{{recipe.vieldType ? recipe.vieldType : text}}</span>
         </li>
       </ul>
       <p class="description text-clip-5 overflow-hidden md:text-clip-4 md:mb-4">{{ recipe.description }}</p>
