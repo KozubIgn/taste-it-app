@@ -12,12 +12,11 @@
 }
 
 body {
-  font-family: var(--bodyFont);
+  font-family: var(--bodyFont); 
   color: var(--textColor);
   line-height: 1.5;
-  height: 100%;
   max-width: 100%;
-  min-height: 100%;
+  min-height: 100vh;
   width: 100%;
   position: absolute;
   top: 0;
@@ -27,33 +26,51 @@ body {
 }
 
 .general-dashboard-app-layout {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    "navbar main"
+    "sidebar main"
+    "sidebar footer";
   color: $font-color-primary;
   height: 100%;
   background-color: $background-color;
-  display: grid;
-  grid-template:
-    "nav article article" 1fr
-    "nav footer footer" auto /
-    auto 1fr auto;
+}
+@media (min-width: 481px) {
+.general-dashboard-app-layout {
+  &.open {
+    grid-template-columns: 185px 1fr;
+  }
+}
+}
+
+@media (max-width: 480px) {
+  .general-dashboard-app-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .general-navigation-layout>aside {
+    position: fixed;
+    width: 100%;
+    background-color: rgba(128, 128, 128, 0.5);
+  }
 }
 
 .header {
   grid-area: header;
 }
+
 .general-content-display-layout {
+  grid-area: main;
   width: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
-  grid-area: article;
 }
-.aside {
-  grid-area: aside;
-}
-.general-navigation-layout {
-  grid-area: nav;
+
+.general-navigation-layout > aside {
+  grid-area: sidebar;
   max-width: 268px;
-  display: flex;
-  flex-direction: column;
   margin-top: $length-sm-3;
   border-right: 1px solid $font-color-label;
   margin-right: 5px;
@@ -70,6 +87,7 @@ body {
     width: 100%;
   }
 }
+
 .general-footer-layout {
   grid-area: footer;
 }

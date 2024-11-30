@@ -1,48 +1,47 @@
 @import "/src/styles/3-helpers/variables";
 
-.sidebar {
-  position: sticky;
-  height: 100%;
+.logo-details {
+  height: 45px;
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  position: relative;
+  opacity: 1;
+  cursor: pointer;
+
+  fa-icon {
+    padding-left: 3px;
+  }
+
+  span {
+    display: none;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+}
+
+aside {
+  margin-top: 25px;
+  position: fixed;
   width: 60px;
   background: $background-color;
-  padding: 6px 16px;
+  padding: 0px 16px;
   z-index: 99;
   transition: width 0.3s ease;
 
-  .logo-details {
-    height: 45px;
+  fa-icon {
+    font-size: 25px;
     display: flex;
-    gap: 5px;
-    align-items: center;
-    position: relative;
-    opacity: 1;
-    cursor: pointer;
-
-    fa-icon {
-      padding-left: 3px;
-    }
-
-    span {
-      font-size: 14px;
-      font-weight: 500;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    &:hover {
-      color: $color-primary;
-      transition: all 0.3s ease;
-    }
+    justify-content: center;
+    width: 25px;
   }
 
   &.open {
-    width: 100%;
-    transition: 0.3s;
-
     .logo-details {
       span {
-        opacity: 1;
+        display: inline;
         pointer-events: auto;
       }
 
@@ -50,13 +49,6 @@
         text-align: right;
       }
     }
-  }
-
-  fa-icon {
-    background-color: transparent;
-    width: 30px;
-    display: block;
-    font-size: 25px;
   }
 
   .nav-list {
@@ -68,6 +60,7 @@
   li {
     position: relative;
     list-style: none;
+    display: inline-block;
 
     &:hover {
       .tooltip {
@@ -103,14 +96,10 @@
       text-decoration: none;
       color: inherit;
       cursor: pointer;
-      gap: 5px;
+      gap: 1em;
 
       &:hover {
         color: $color-primary;
-
-        fa-icon {
-          transition: 0.3s ease;
-        }
       }
     }
 
@@ -120,16 +109,20 @@
       white-space: nowrap;
       opacity: 0;
       pointer-events: none;
-      transition: all 0.3s ease;
     }
   }
 
-  &.open li,
-  &.open .logo-name {
-    .links-name {
+  &.open {
+    display: block;
+
+    .logo-name,
+    li a {
+      transition: all 0.3s ease;
+    }
+
+    span {
       opacity: 1;
       pointer-events: auto;
-      transition: all 0.3s ease;
     }
 
     .tooltip {
@@ -138,6 +131,47 @@
   }
 }
 
+@media (max-width: 480px) {
+  aside {
+    margin: 0;
+    padding: 25px 16px 0 16px;
+    width: auto;
+    background-color: transparent;
+
+    ul {
+      display: none;
+    }
+
+    .nav-list {
+      height: 0;
+      margin: 0;
+      padding: 0;
+    }
+
+    &.open {
+      transition: all 0.3s ease;
+      display: block;
+      height: 100%;
+      width: auto;
+      backdrop-filter: grayscale(100%) blur(2px);
+      background-color: rgba(128, 128, 128, 0.5);
+
+      .logo-name,
+      ul,
+      li {
+        display: block;
+      }
+
+      fa-icon {
+        background-color: transparent;
+        display: block;
+        font-size: 25px;
+      }
+    }
+  }
+}
+
 a:not([href]):not([class]):hover {
-  color: $color-primary !important
+  color: $color-primary !important;
+  transition: 0.3s ease;
 }

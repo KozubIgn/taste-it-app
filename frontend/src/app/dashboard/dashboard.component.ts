@@ -6,6 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
+  sidebarOpen = false;
 
+  onSidebarOpenChange(isOpen: boolean) {
+    this.sidebarOpen = isOpen;
+  }
 }
 

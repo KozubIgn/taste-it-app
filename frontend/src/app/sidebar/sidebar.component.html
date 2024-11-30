@@ -1,10 +1,10 @@
-<div class="sidebar" #sidebar [ngClass]="open ? 'sidebar open' : 'sidebar'">
+<aside class="general-navigation-layout" #sidebar [ngClass]="open ? ' open' : ''">
   <div class="logo-details">
     <a (click)="onOpen()">
       <fa-icon [icon]="['fas', 'bars']"></fa-icon>
     </a>
     <div *ngIf="user" class="logo-name">
-      <span>{{user.email}}</span>
+      <span class="links-name">{{user.email}}</span>
     </div>
   </div>
 
@@ -69,4 +69,4 @@
     </li>
 
   </ul>
-</div>
+</aside>
