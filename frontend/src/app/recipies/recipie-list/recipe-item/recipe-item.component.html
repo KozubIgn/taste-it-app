@@ -1,5 +1,5 @@
 <a class="wrapper">
-  <div class="ft-recipe flex flex-row w-full m-1 p-2 lg:flex-wrap lg:justify-center">
+  <div class="ft-recipe flex flex-row w-full m-1 p-2 h-56 lg:h-auto lg:flex-wrap lg:justify-center">
     <div class=" relative thumb lg:h-44 lg:w-full w-1/3">
       <img src="{{urlString?.url}}" alt="{{ recipe.name }}" />
         <fa-icon *ngIf="recipe.favourites" title="Added to favourites" class="absolute top-0 left-0 ml-1 mt-1 drop-shadow-[0_1px_5px_rgba(248,248,248,1)] text-lg text-primaryCol"
@@ -7,13 +7,13 @@
     </div>
     <div class="content flex flex-col w-2/3 lg:w-full">
       <div>
-        <p class="recipe-title truncate">{{recipe.name}}</p>
+        <p class="truncate md:mb-4">{{recipe.name}}</p>
       </div>
       <ul class="recipe-details">
           <li class="recipe-details-item">
             <span class="value"> <fa-icon [icon]="['fas', 'clock']"></fa-icon>
               {{recipe.cookTime ? recipe.cookTime : noValue}} </span>
-            <span class="title">Minutes</span>
+            <span class="title truncate">Minutes</span>
           </li>
         <li class=" recipe-details-item" *ngIf="showListItem">
           <span class="value">
@@ -32,8 +32,8 @@
           <span class="title">{{recipe.vieldType ? recipe.vieldType : text}}</span>
         </li>
       </ul>
-      <p class="description text-clip-4 overflow-hidden">{{ recipe.description }}</p>
-      <div class="self-center"><button mat-raised-button color="primary" (click)="onViewRecipe(recipe)">
+      <p class="description text-clip-5 overflow-hidden md:text-clip-4 md:mb-4">{{ recipe.description }}</p>
+      <div class="hidden md:visible md:flex md:self-center"><button mat-raised-button color="primary" (click)="onViewRecipe(recipe)">
           View Recipe
         </button></div>
     </div>

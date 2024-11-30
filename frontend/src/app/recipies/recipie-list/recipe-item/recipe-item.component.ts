@@ -29,7 +29,7 @@ export class RecipeItemComponent implements OnInit {
 
   @HostListener('window:resize', ['$event']) onResize() {
     this.screenWidthSubject$.subscribe(width => {
-      this.showListItem = width < 976;
+      this.showListItem = width < 976 && width > 480;
     })
   }
 
