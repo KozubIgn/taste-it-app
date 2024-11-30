@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { AuthService } from '../auth/auth.service';
 import { Subscription } from 'rxjs';
 import { User } from '../auth/user.model';
@@ -12,6 +12,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   open: boolean = false;
   user: User | null | undefined;
   private userSub: Subscription | undefined;
+  @Output() openStateChange = new EventEmitter<boolean>();
 
   constructor(private authService: AuthService) { }
 
@@ -22,6 +23,7 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
   onOpen() {
     this.open = !this.open;
+    this.openStateChange.emit(this.open);
   }
 
   onLogout() {

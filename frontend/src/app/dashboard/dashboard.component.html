@@ -1,7 +1,5 @@
-<div class="general-dashboard-app-layout">
-  <div class="general-navigation-layout">
-    <app-sidebar></app-sidebar>
-  </div>
+<div class="general-dashboard-app-layout"  [class.open]="sidebarOpen">
+    <app-sidebar (openStateChange)="onSidebarOpenChange($event)"></app-sidebar>
   <div class="general-content-display-layout">
     <router-outlet></router-outlet>
   </div>
