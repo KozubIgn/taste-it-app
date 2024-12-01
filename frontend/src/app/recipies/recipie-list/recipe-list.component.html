@@ -1,17 +1,22 @@
-<div class="board-wrapper">
+<div class="board-wrapper relative">
   <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
-  <div class="pg-row">
-    <div class="pg-top-row">
-      <button mat-raised-button color="primary" (click)="onNewRecipe()">
+  <div class="pg-row flex flex-column lg:justify-center">
+    <div class="hidden pg-top-row md:flex md:flex-row md:visible">
+      <button mat-raised-button color="primary" class="mx-1.5" (click)="onNewRecipe()">
         <fa-icon [icon]="['fas','circle-plus']"></fa-icon>
         Add Recipe
       </button>
     </div>
     <div class="flex flex-col w-full lg:flex-row lg:flex-wrap lg:justify-start">
       <ng-container *ngIf="recipes$ | async as recipes">
-        <app-recipe-item class="w-full m-1.5 mt-0 lg:w-64 " *ngFor="let recipeElement of recipes"
+        <app-recipe-item class="w-full lg:m-1.5 mt-0 lg:w-64 " *ngFor="let recipeElement of recipes"
           [recipe]="recipeElement" (click)="onSelectRecipeItem(recipeElement)"></app-recipe-item>
       </ng-container>
     </div>
+  </div>
+  <div class="sticky bottom-[5%] left-[50%] max-w-fit mx-auto z-1 md:hidden">
+  <button mat-fab color="primary" (click)="onNewRecipe()">
+    <fa-icon [icon]="['fas','plus']"></fa-icon>
+  </button>
   </div>
 </div>

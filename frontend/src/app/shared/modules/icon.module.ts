@@ -30,7 +30,8 @@ import {
   faFireBurner,
   faBowlRice,
   faBlender,
-  faCartPlus
+  faCartPlus,
+  faPlus
 } from '@fortawesome/free-solid-svg-icons';
 import {
   faHeart as farHeart,
@@ -78,7 +79,8 @@ export class IconModule {
       faBowlRice,
       faBlender,
       faCartPlus,
-      faHand
+      faHand,
+      faPlus
     );
   }
 }

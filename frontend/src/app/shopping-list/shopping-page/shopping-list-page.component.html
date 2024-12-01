@@ -1,7 +1,7 @@
-<div class="board-wrapper">
+<div class="board-wrapper relative">
     <img class="dashboard-logo" src="../../../assets/logo_2.png" alt="logo-2" />
     <div class="pg-row">
-        <div class="pg-top-row">
+        <div class="hidden pg-top-row md:flex md:flex-row md:visible">
             <button mat-raised-button color="primary" (click)="onNewShoppingList()">
                 <fa-icon [icon]="['fas','cart-plus']"></fa-icon>
                 New list
@@ -11,7 +11,11 @@
             <ng-container *ngIf="shoppingLists$ | async">
                 <app-shopping-list [shoppingLists$]="shoppingLists$"></app-shopping-list>
             </ng-container>
-          
         </div>
+    </div>
+    <div class="sticky bottom-[5%] left-[50%] max-w-fit mx-auto z-1 md:hidden">
+        <button mat-fab color="primary" (click)="onNewShoppingList()">
+            <fa-icon [icon]="['fas','cart-plus']"></fa-icon>
+        </button>
     </div>
 </div>

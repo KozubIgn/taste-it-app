@@ -1,4 +1,4 @@
 export enum ListType {
-    ALL = 'all',
+    RECIPES = 'recipes',
     FAVOURITES = 'favourites'
 }
