@@ -73,15 +73,16 @@ img {
 
                 fa-icon {
                     font-size: 12px;
+                    margin-right: 0.3rem;
                     color: $color-primary;
                 }
 
                 .value {
+                    display: inline-flex;
                     vertical-align: bottom;
                 }
 
                 .title {
-                    display: block;
                     width: inherit;
                     margin-top: -4px;
                 }
